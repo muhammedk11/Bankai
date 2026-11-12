@@ -1,75 +1,6 @@
 
 import { useSearchParams, Link } from "react-router-dom";
-
-// Product images
-import zenitsu from "../assets/images/products/zenitsu-figure.webp";
-import katana from "../assets/images/products/demon-slayer-katana.webp";
-import madara1 from "../assets/images/products/madara-figure-1.jpg";
-import narutoKnife from "../assets/images/products/naruto-knife.jpg";
-import zoro from "../assets/images/products/zoro-figure.jpg";
-import sukuna from "../assets/images/products/sukuna-figure.jpg";
-import madara2 from "../assets/images/products/madara-figure-2.webp";
-import yuji from "../assets/images/products/yuji-figure.jpeg";
-
-// Temporary product data
-const products = [
-  {
-    id: 1,
-    name: "Zenitsu Action Figure",
-    anime: "Demon Slayer",
-    type: "figures",
-    image: zenitsu,
-  },
-  {
-    id: 2,
-    name: "Demon Slayer Katana",
-    anime: "Demon Slayer",
-    type: "weapons",
-    image: katana,
-  },
-  {
-    id: 3,
-    name: "Madara Uchiha Figure - Version 1",
-    anime: "Naruto",
-    type: "figures",
-    image: madara1,
-  },
-  {
-    id: 4,
-    name: "Naruto Knife",
-    anime: "Naruto",
-    type: "weapons",
-    image: narutoKnife,
-  },
-  {
-    id: 5,
-    name: "Roronoa Zoro Action Figure",
-    anime: "One Piece",
-    type: "figures",
-    image: zoro,
-  },
-  {
-    id: 6,
-    name: "Ryomen Sukuna Action Figure",
-    anime: "Jujutsu Kaisen",
-    type: "figures",
-    image: sukuna,
-  },
-  {
-    id: 7,
-    name: "Madara Uchiha Figure - Version 2",
-    anime: "Naruto",
-    type: "figures",
-    image: madara2,
-  },
-  {
-    id: 8,
-    name: "Yuji Itadori Action Figure",
-    anime: "Jujutsu Kaisen",
-    type: "figures",
-    image: yuji,
-  },
-];
+import { products } from "../data/products";
 
 function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -172,6 +103,7 @@ function Products() {
         {/* Product Grid */}
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-4 gap-6">
+
             {filteredProducts.map((product) => (
               <Link
                 key={product.id}
@@ -201,12 +133,14 @@ function Products() {
                 </div>
               </Link>
             ))}
+
           </div>
         ) : (
           <div className="py-20 text-center">
             <h2 className="text-2xl font-semibold">
               No products found
             </h2>
+
             <p className="mt-3 text-gray-400">
               Try changing or clearing your filters.
             </p>

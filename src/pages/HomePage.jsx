@@ -1,68 +1,14 @@
 
 import { Link } from "react-router-dom";
-
 import heroVideo from "../assets/videos/hero video 1.mp4";
-
-// Product images
-import zenitsu from "../assets/images/products/zenitsu-figure.webp";
-import katana from "../assets/images/products/demon-slayer-katana.webp";
-import madara1 from "../assets/images/products/madara-figure-1.jpg";
-import narutoKnife from "../assets/images/products/naruto-knife.jpg";
-import zoro from "../assets/images/products/zoro-figure.jpg";
-import sukuna from "../assets/images/products/sukuna-figure.jpg";
-import madara2 from "../assets/images/products/madara-figure-2.webp";
-import yuji from "../assets/images/products/yuji-figure.jpeg";
-
-// Featured products
-const products = [
-  {
-    name: "Zenitsu Action Figure",
-    category: "Demon Slayer",
-    image: zenitsu,
-  },
-  {
-    name: "Demon Slayer Katana",
-    category: "Anime Weapon",
-    image: katana,
-  },
-  {
-    name: "Madara Uchiha Figure - Version 1",
-    category: "Naruto",
-    image: madara1,
-  },
-  {
-    name: "Naruto Knife",
-    category: "Anime Weapon",
-    image: narutoKnife,
-  },
-  {
-    name: "Roronoa Zoro Action Figure",
-    category: "One Piece",
-    image: zoro,
-  },
-  {
-    name: "Ryomen Sukuna Action Figure",
-    category: "Jujutsu Kaisen",
-    image: sukuna,
-  },
-  {
-    name: "Madara Uchiha Figure - Version 2",
-    category: "Naruto",
-    image: madara2,
-  },
-  {
-    name: "Yuji Itadori Action Figure",
-    category: "Jujutsu Kaisen",
-    image: yuji,
-  },
-];
+import { products } from "../data/products";
 
 function Home() {
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
 
       {/* Hero Section */}
-      <section className="relative flex min-h-[550px] items-center overflow-hidden bg-zinc-950 px-6 py-24 sm:min-h-[650px]">
+      <section className="relative flex min-h-[650px] items-center overflow-hidden bg-zinc-950 px-8 py-24">
 
         <video
           autoPlay
@@ -83,12 +29,12 @@ function Home() {
               Welcome to BANKAI
             </p>
 
-            <h1 className="text-5xl font-black leading-tight sm:text-7xl">
+            <h1 className="text-7xl font-black leading-tight">
               UNLEASH YOUR
               <span className="block text-purple-500">FANDOM.</span>
             </h1>
 
-            <p className="mt-6 max-w-lg text-base leading-7 text-gray-300 sm:text-lg">
+            <p className="mt-6 max-w-lg text-lg leading-7 text-gray-300">
               Discover anime-inspired merchandise, collectibles and
               everything your favourite worlds have to offer.
             </p>
@@ -105,7 +51,7 @@ function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="bg-zinc-900/60 px-6 py-20">
+      <section className="bg-zinc-900/60 px-8 py-20">
         <div className="mx-auto max-w-7xl">
 
           <div className="mb-10">
@@ -113,7 +59,7 @@ function Home() {
               Handpicked for you
             </p>
 
-            <h2 className="text-3xl font-bold sm:text-4xl">
+            <h2 className="text-4xl font-bold">
               Featured Merchandise
             </h2>
 
@@ -122,11 +68,11 @@ function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-4 gap-6">
             {products.map((product) => (
               <Link
-                to="/products"
-                key={product.name}
+                to={`/products/${product.id}`}
+                key={product.id}
                 className="group overflow-hidden rounded-xl border border-white/5 bg-zinc-900 transition hover:border-purple-500/50"
               >
                 <div className="flex aspect-square items-center justify-center overflow-hidden bg-zinc-800 p-4">
@@ -139,7 +85,7 @@ function Home() {
 
                 <div className="p-4">
                   <p className="text-xs text-purple-400">
-                    {product.category}
+                    {product.anime}
                   </p>
 
                   <h3 className="mt-2 font-semibold transition group-hover:text-purple-400">
@@ -147,7 +93,7 @@ function Home() {
                   </h3>
 
                   <p className="mt-3 text-sm text-gray-400">
-                    Explore Product →
+                    View Product →
                   </p>
                 </div>
               </Link>
@@ -167,14 +113,14 @@ function Home() {
       </section>
 
       {/* Promotional Section */}
-      <section className="px-6 py-20">
-        <div className="mx-auto max-w-7xl overflow-hidden rounded-2xl bg-gradient-to-r from-purple-950 via-purple-800 to-zinc-900 px-8 py-16 text-center sm:px-16">
+      <section className="px-8 py-20">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-2xl bg-gradient-to-r from-purple-950 via-purple-800 to-zinc-900 px-16 py-16 text-center">
 
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.25em] text-purple-300">
             Your anime world awaits
           </p>
 
-          <h2 className="text-3xl font-black sm:text-5xl">
+          <h2 className="text-5xl font-black">
             YOUR FANDOM.
             <span className="block text-purple-300">YOUR STYLE.</span>
           </h2>
