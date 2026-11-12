@@ -1,0 +1,17 @@
+{
+  "users": [
+    {
+      "name": "muhammed",
+      "email": "muhammed011@gmail.com",
+      "password": "qwer4321",
+      "id": "lVPO-pOXZ0M"
+    },
+    {
+      "name": "levi",
+      "email": "muhammed01@gmail.com",
+      "password": "qwerty654321",
+      "id": "JaM6rh9nXmU"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
