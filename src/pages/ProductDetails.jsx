@@ -5,14 +5,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 
 import api from "../services/api";
-import { addToCart } from "../store/slices/cartSlice";
-import { addToWishlist, removeFromWishlist } from "../store/slices/wishlistSlice";
+import { useCart } from "../hooks/useCart";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../store/slices/wishlistSlice";
 
 function ProductDetails() {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  // Fetch one product from JSON Server
+  const user = useSelector((state) => state.auth.user);
+
+  const wishlistItems = useSelector(
+    (state) => state.wishlist.items
+  );
+
+  // Fetch product from JSON Server
   const {
     data: product,
     isLoading,
@@ -25,15 +34,13 @@ function ProductDetails() {
     },
   });
 
-  const wishlistItems = useSelector(
-    (state) => state.wishlist.items
-  );
+  // Backend cart
+  const { addItem } = useCart(user?.id);
 
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [added, setAdded] = useState(false);
 
-  // Loading state
   if (isLoading) {
     return (
       <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
@@ -42,12 +49,14 @@ function ProductDetails() {
     );
   }
 
-  // Error or product not found
   if (isError || !product) {
     return (
       <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">Product Not Found</h1>
+          <h1 className="text-3xl font-bold">
+            Product Not Found
+          </h1>
+
           <Link
             to="/products"
             className="mt-6 inline-block text-purple-400"
@@ -69,6 +78,19 @@ function ProductDetails() {
     } else {
       dispatch(addToWishlist(product));
     }
+  };
+
+  const handleAddToCart = () => {
+    setAdded(false);
+
+    addItem.mutate(
+      { product, quantity },
+      {
+        onSuccess: () => {
+          setAdded(true);
+        },
+      }
+    );
   };
 
   return (
@@ -108,7 +130,6 @@ function ProductDetails() {
 
         {/* Product Information */}
         <div className="flex flex-col justify-center">
-
           <p className="text-sm font-semibold uppercase tracking-widest text-purple-400">
             {product.anime}
           </p>
@@ -131,16 +152,20 @@ function ProductDetails() {
               : "Out of Stock"}
           </p>
 
-          {/* Quantity */}
+          {/* Quantity and Add to Cart */}
           {product.stock > 0 && (
             <>
               <div className="mt-8">
-                <p className="mb-3 font-semibold">Quantity</p>
+                <p className="mb-3 font-semibold">
+                  Quantity
+                </p>
 
                 <div className="flex w-fit items-center overflow-hidden rounded-lg border border-white/10">
                   <button
                     onClick={() =>
-                      setQuantity((prev) => Math.max(1, prev - 1))
+                      setQuantity((prev) =>
+                        Math.max(1, prev - 1)
+                      )
                     }
                     className="px-5 py-3 hover:bg-zinc-800"
                   >
@@ -171,15 +196,16 @@ function ProductDetails() {
                 </span>
               </p>
 
-              {/* Add to Cart */}
               <button
-                onClick={() => {
-                  dispatch(addToCart({ product, quantity }));
-                  setAdded(true);
-                }}
-                className="mt-8 w-full rounded-lg bg-purple-600 px-6 py-4 font-semibold hover:bg-purple-700"
+                onClick={handleAddToCart}
+                disabled={!user?.id || addItem.isPending}
+                className="mt-8 w-full rounded-lg bg-purple-600 px-6 py-4 font-semibold hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Add to Cart
+                {!user?.id
+                  ? "Login to Add to Cart"
+                  : addItem.isPending
+                    ? "Adding..."
+                    : "Add to Cart"}
               </button>
 
               {added && (
@@ -189,6 +215,12 @@ function ProductDetails() {
                 >
                   Added to cart! View Cart →
                 </Link>
+              )}
+
+              {addItem.isError && (
+                <p className="mt-3 text-center text-sm text-red-400">
+                  Could not add this product. Please try again.
+                </p>
               )}
             </>
           )}
@@ -209,7 +241,6 @@ function ProductDetails() {
           >
             ← Back to Products
           </Link>
-
         </div>
       </div>
     </section>
