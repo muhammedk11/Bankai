@@ -1,9 +1,11 @@
 
 import { Link } from "react-router-dom";
 import heroVideo from "../assets/videos/hero video 1.mp4";
-import { products } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
 
 function Home() {
+  const { data: products = [], isLoading, isError } = useProducts();
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
 
@@ -68,37 +70,51 @@ function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-4 gap-6">
-            {products.map((product) => (
-              <Link
-                to={`/products/${product.id}`}
-                key={product.id}
-                className="group overflow-hidden rounded-xl border border-white/5 bg-zinc-900 transition hover:border-purple-500/50"
-              >
-                <div className="flex aspect-square items-center justify-center overflow-hidden bg-zinc-800 p-4">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="h-full w-full object-contain transition duration-500 group-hover:scale-105"
-                  />
-                </div>
+          {isLoading ? (
+            <p className="py-10 text-center text-gray-400">
+              Loading products...
+            </p>
+          ) : isError ? (
+            <p className="py-10 text-center text-red-400">
+              Failed to load products.
+            </p>
+          ) : products.length === 0 ? (
+            <p className="py-10 text-center text-gray-400">
+              No products available.
+            </p>
+          ) : (
+            <div className="grid grid-cols-4 gap-6">
+              {products.slice(0, 4).map((product) => (
+                <Link
+                  to={`/products/${product.id}`}
+                  key={product.id}
+                  className="group overflow-hidden rounded-xl border border-white/5 bg-zinc-900 transition hover:border-purple-500/50"
+                >
+                  <div className="flex aspect-square items-center justify-center overflow-hidden bg-zinc-800 p-4">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="h-full w-full object-contain transition duration-500 group-hover:scale-105"
+                    />
+                  </div>
 
-                <div className="p-4">
-                  <p className="text-xs text-purple-400">
-                    {product.anime}
-                  </p>
+                  <div className="p-4">
+                    <p className="text-xs text-purple-400">
+                      {product.anime}
+                    </p>
 
-                  <h3 className="mt-2 font-semibold transition group-hover:text-purple-400">
-                    {product.name}
-                  </h3>
+                    <h3 className="mt-2 font-semibold transition group-hover:text-purple-400">
+                      {product.name}
+                    </h3>
 
-                  <p className="mt-3 text-sm text-gray-400">
-                    View Product →
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
+                    <p className="mt-3 text-sm text-gray-400">
+                      View Product →
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
 
           <div className="mt-10 text-center">
             <Link

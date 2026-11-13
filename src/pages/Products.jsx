@@ -1,12 +1,21 @@
 
 import { useSearchParams, Link } from "react-router-dom";
-import { products } from "../data/products";
+import { useProducts } from "../hooks/useProducts";
 
 function Products() {
+  const { data: products = [], isLoading, isError } = useProducts();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedAnime = searchParams.get("anime") || "";
   const selectedType = searchParams.get("type") || "";
+
+  if (isLoading) {
+  return <p className="p-8 text-center">Loading products...</p>;
+}
+
+if (isError) {
+  return <p className="p-8 text-center">Failed to load products.</p>;
+}
 
   const filteredProducts = products.filter((product) => {
     const animeMatch =

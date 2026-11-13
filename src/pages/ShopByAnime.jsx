@@ -1,22 +1,14 @@
 
 import { Link } from "react-router-dom";
 
-import attackOnTitan from "../assets/images/collections/attack-on-titan.jpg";
-import bleach from "../assets/images/collections/bleach.jpg";
-import blueLock from "../assets/images/collections/blue-lock.jpg";
-import deathNote from "../assets/images/collections/death-note.jpg";
-import demonSlayer from "../assets/images/collections/demon-slayer.jpg";
-import chainsawMan from "../assets/images/collections/chainsaw-man.jpg";
-import jujutsuKaisen from "../assets/images/collections/jujutsu-kaisen.jpg";
-
 const animeList = [
-  { name: "Attack on Titan", image: attackOnTitan },
-  { name: "Bleach", image: bleach },
-  { name: "Blue Lock", image: blueLock },
-  { name: "Death Note", image: deathNote },
-  { name: "Demon Slayer", image: demonSlayer },
-  { name: "Chainsaw Man", image: chainsawMan },
-  { name: "Jujutsu Kaisen", image: jujutsuKaisen },
+  "Attack on Titan",
+  "Bleach",
+  "Blue Lock",
+  "Death Note",
+  "Demon Slayer",
+  "Chainsaw Man",
+  "Jujutsu Kaisen",
 ];
 
 function ShopByAnime() {
@@ -34,23 +26,15 @@ function ShopByAnime() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-3 gap-5">
           {animeList.map((anime) => (
             <Link
-              key={anime.name}
-              to={`/products?anime=${encodeURIComponent(anime.name)}`}
-              className="group relative overflow-hidden rounded-xl"
+              key={anime}
+              to={`/products?anime=${encodeURIComponent(anime)}`}
+              className="group flex min-h-48 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 p-6 text-center transition duration-300 hover:border-purple-500 hover:bg-zinc-800"
             >
-              <img
-                src={anime.image}
-                alt={anime.name}
-                className="aspect-[3/4] w-full object-cover transition duration-500 group-hover:scale-105"
-              />
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
-
-              <h2 className="absolute bottom-0 left-0 w-full p-4 text-lg font-bold transition group-hover:text-purple-400 md:text-xl">
-                {anime.name}
+              <h2 className="text-xl font-bold transition group-hover:text-purple-400">
+                {anime}
               </h2>
             </Link>
           ))}

@@ -2,8 +2,9 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
 
-import { products } from "../data/products";
+import api from "../services/api";
 import { addToCart } from "../store/slices/cartSlice";
 import { addToWishlist, removeFromWishlist } from "../store/slices/wishlistSlice";
 
@@ -11,18 +12,38 @@ function ProductDetails() {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const product = products.find(
-    (item) => item.id === Number(id)
-  );
+  // Fetch one product from JSON Server
+  const {
+    data: product,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["product", id],
+    queryFn: async () => {
+      const response = await api.get(`/products/${id}`);
+      return response.data;
+    },
+  });
 
   const wishlistItems = useSelector(
     (state) => state.wishlist.items
   );
 
   const [quantity, setQuantity] = useState(1);
+  const [activeImage, setActiveImage] = useState(0);
   const [added, setAdded] = useState(false);
 
-  if (!product) {
+  // Loading state
+  if (isLoading) {
+    return (
+      <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
+        Loading product...
+      </section>
+    );
+  }
+
+  // Error or product not found
+  if (isError || !product) {
     return (
       <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
         <div className="text-center">
@@ -38,10 +59,8 @@ function ProductDetails() {
     );
   }
 
-  const [activeImage, setActiveImage] = useState(0);
-
   const isWishlisted = wishlistItems.some(
-    (item) => item.id === product.id
+    (item) => String(item.id) === String(product.id)
   );
 
   const handleWishlist = () => {
@@ -99,7 +118,7 @@ function ProductDetails() {
           </h1>
 
           <p className="mt-5 text-3xl font-bold text-purple-400">
-            ${product.price.toFixed(2)}
+            ${Number(product.price).toFixed(2)}
           </p>
 
           <p className="mt-6 leading-7 text-gray-400">
@@ -135,7 +154,7 @@ function ProductDetails() {
                   <button
                     onClick={() =>
                       setQuantity((prev) =>
-                        Math.min(product.stock, prev + 1)
+                        Math.min(Number(product.stock), prev + 1)
                       )
                     }
                     className="px-5 py-3 hover:bg-zinc-800"
@@ -148,7 +167,7 @@ function ProductDetails() {
               <p className="mt-6 text-lg">
                 Total:{" "}
                 <span className="font-bold text-purple-400">
-                  ${(product.price * quantity).toFixed(2)}
+                  ${(Number(product.price) * quantity).toFixed(2)}
                 </span>
               </p>
 
