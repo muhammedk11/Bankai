@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
+
 import api from "../services/api";
 import { setCredentials } from "../store/slices/authSlice";
 
@@ -15,7 +17,39 @@ function Login() {
   });
 
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const loginMutation = useMutation({
+    mutationFn: async ({ email, password }) => {
+      const response = await api.get("/users", {
+        params: { email },
+      });
+
+      const user = response.data[0];
+
+      if (!user || user.password !== password) {
+        throw new Error("Invalid email or password");
+      }
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      };
+    },
+
+    onSuccess: (user) => {
+      dispatch(setCredentials(user));
+      navigate("/");
+    },
+
+    onError: (err) => {
+      setError(
+        err.message === "Invalid email or password"
+          ? err.message
+          : "Login failed. Please try again."
+      );
+    },
+  });
 
   const handleChange = (e) => {
     setFormData({
@@ -24,7 +58,7 @@ function Login() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
 
@@ -34,33 +68,10 @@ function Login() {
       return setError("All fields are required");
     }
 
-    try {
-      setLoading(true);
-
-      const response = await api.get("/users", {
-        params: { email },
-      });
-
-      const user = response.data[0];
-
-      if (!user || user.password !== formData.password) {
-        return setError("Invalid email or password");
-      }
-
-      dispatch(
-        setCredentials({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-        })
-      );
-
-      navigate("/");
-    } catch {
-      setError("Login failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    loginMutation.mutate({
+      email,
+      password: formData.password,
+    });
   };
 
   return (
@@ -101,10 +112,10 @@ function Login() {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={loginMutation.isPending}
           className="w-full rounded-lg bg-purple-600 p-3 font-semibold hover:bg-purple-700 disabled:opacity-50"
         >
-          {loading ? "Logging in..." : "Login"}
+          {loginMutation.isPending ? "Logging in..." : "Login"}
         </button>
 
         <p className="text-center text-sm text-gray-400">

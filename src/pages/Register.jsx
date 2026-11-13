@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import api from "../services/api";
 
 function Register() {
@@ -14,7 +15,34 @@ function Register() {
   });
 
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const registerMutation = useMutation({
+    mutationFn: async (userData) => {
+      const response = await api.get("/users", {
+        params: { email: userData.email },
+      });
+
+      if (response.data.length > 0) {
+        throw new Error("Email already registered");
+      }
+
+      const newUser = await api.post("/users", userData);
+
+      return newUser.data;
+    },
+
+    onSuccess: () => {
+      navigate("/login");
+    },
+
+    onError: (err) => {
+      setError(
+        err.message === "Email already registered"
+          ? err.message
+          : "Registration failed. Please try again."
+      );
+    },
+  });
 
   const handleChange = (e) => {
     setFormData({
@@ -23,7 +51,7 @@ function Register() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
 
@@ -39,29 +67,11 @@ function Register() {
       return setError("Password must be at least 8 characters");
     }
 
-    try {
-      setLoading(true);
-
-      const response = await api.get("/users", {
-        params: { email: formData.email },
-      });
-
-      if (response.data.length > 0) {
-        return setError("Email already registered");
-      }
-
-      await api.post("/users", {
-        name: formData.name.trim(),
-        email: formData.email.trim().toLowerCase(),
-        password: formData.password,
-      });
-
-      navigate("/login");
-    } catch (err) {
-      setError("Registration failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    registerMutation.mutate({
+      name: formData.name.trim(),
+      email: formData.email.trim().toLowerCase(),
+      password: formData.password,
+    });
   };
 
   return (
@@ -120,10 +130,12 @@ function Register() {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={registerMutation.isPending}
           className="w-full rounded-lg bg-purple-600 p-3 font-semibold hover:bg-purple-700 disabled:opacity-50"
         >
-          {loading ? "Creating Account..." : "Register"}
+          {registerMutation.isPending
+            ? "Creating Account..."
+            : "Register"}
         </button>
 
         <p className="text-center text-sm text-gray-400">

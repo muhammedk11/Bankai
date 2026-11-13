@@ -11,6 +11,12 @@
       "name": "levi",
       "email": "muhammed01@gmail.com",
       "password": "CHANGE_THIS_DEMO_PASSWORD"
+    },
+    {
+      "name": "demo",
+      "email": "demo@gamil.com",
+      "password": "qwer4321",
+      "id": "Avw31lvCbVQ"
     }
   ],
   "products": [
