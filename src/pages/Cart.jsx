@@ -1,24 +1,99 @@
 
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
-import {
-  removeFromCart,
-  updateQuantity,
-  clearCart,
-} from "../store/slices/cartSlice";
+import { useProducts } from "../hooks/useProducts";
+import { useCart } from "../hooks/useCart";
 
 function Cart() {
-  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
 
-  const cartItems = useSelector(
-    (state) => state.cart.items
-  );
+  const {
+    cart,
+    isLoading: cartLoading,
+    isError: cartError,
+    updateItem,
+    removeItem,
+    clearCart,
+  } = useCart(user?.id);
+
+  const {
+    data: products = [],
+    isLoading: productsLoading,
+    isError: productsError,
+  } = useProducts();
+
+  const isLoading = cartLoading || productsLoading;
+  const isError = cartError || productsError;
+
+  // Match cart product IDs with actual product details
+  const cartItems = (cart?.items || [])
+    .map((item) => {
+      const product = products.find(
+        (product) =>
+          String(product.id) === String(item.productId)
+      );
+
+      if (!product) return null;
+
+      return {
+        ...product,
+        quantity: item.quantity,
+      };
+    })
+    .filter(Boolean);
 
   const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total, item) =>
+      total + Number(item.price) * item.quantity,
     0
   );
+
+  const totalItems = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
+  if (!user) {
+    return (
+      <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 px-8 text-white">
+        <h1 className="text-3xl font-bold">
+          Please Login
+        </h1>
+
+        <p className="mt-4 text-gray-400">
+          Login to view your shopping cart.
+        </p>
+
+        <Link
+          to="/login"
+          className="mt-8 rounded-lg bg-purple-600 px-8 py-3 font-semibold transition hover:bg-purple-700"
+        >
+          Login
+        </Link>
+      </section>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
+        <p className="text-lg text-gray-400">
+          Loading your cart...
+        </p>
+      </section>
+    );
+  }
+
+  if (isError) {
+    return (
+      <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
+        <p className="text-lg text-red-400">
+          Failed to load your cart. Please try again.
+        </p>
+      </section>
+    );
+  }
 
   if (cartItems.length === 0) {
     return (
@@ -58,10 +133,11 @@ function Cart() {
           </div>
 
           <button
-            onClick={() => dispatch(clearCart())}
-            className="text-sm text-red-400 transition hover:text-red-300"
+            onClick={() => clearCart.mutate()}
+            disabled={clearCart.isPending}
+            className="text-sm text-red-400 transition hover:text-red-300 disabled:opacity-50"
           >
-            Clear Cart
+            {clearCart.isPending ? "Clearing..." : "Clear Cart"}
           </button>
         </div>
 
@@ -69,7 +145,6 @@ function Cart() {
 
           {/* Cart Items */}
           <div className="col-span-2 space-y-5">
-
             {cartItems.map((item) => (
               <div
                 key={item.id}
@@ -86,28 +161,29 @@ function Cart() {
 
                 {/* Product Information */}
                 <div className="flex flex-1 items-center justify-between">
-
                   <div>
                     <h2 className="text-lg font-semibold">
                       {item.name}
                     </h2>
 
                     <p className="mt-2 text-purple-400">
-                      ${item.price.toFixed(2)}
+                      ${Number(item.price).toFixed(2)}
                     </p>
 
                     {/* Quantity */}
                     <div className="mt-5 flex w-fit items-center overflow-hidden rounded-lg border border-white/10">
                       <button
                         onClick={() =>
-                          dispatch(
-                            updateQuantity({
-                              id: item.id,
-                              quantity: item.quantity - 1,
-                            })
-                          )
+                          updateItem.mutate({
+                            productId: item.id,
+                            quantity: item.quantity - 1,
+                            stock: item.stock,
+                          })
                         }
-                        disabled={item.quantity <= 1}
+                        disabled={
+                          item.quantity <= 1 ||
+                          updateItem.isPending
+                        }
                         className="px-4 py-2 transition hover:bg-zinc-800 disabled:opacity-40"
                       >
                         −
@@ -119,14 +195,16 @@ function Cart() {
 
                       <button
                         onClick={() =>
-                          dispatch(
-                            updateQuantity({
-                              id: item.id,
-                              quantity: item.quantity + 1,
-                            })
-                          )
+                          updateItem.mutate({
+                            productId: item.id,
+                            quantity: item.quantity + 1,
+                            stock: item.stock,
+                          })
                         }
-                        disabled={item.quantity >= item.stock}
+                        disabled={
+                          item.quantity >= item.stock ||
+                          updateItem.isPending
+                        }
                         className="px-4 py-2 transition hover:bg-zinc-800 disabled:opacity-40"
                       >
                         +
@@ -137,40 +215,37 @@ function Cart() {
                   {/* Item Total and Remove */}
                   <div className="text-right">
                     <p className="font-semibold">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      ${(Number(item.price) * item.quantity).toFixed(2)}
                     </p>
 
                     <button
-                      onClick={() =>
-                        dispatch(removeFromCart(item.id))
-                      }
-                      className="mt-5 text-sm text-red-400 transition hover:text-red-300"
+                      onClick={() => removeItem.mutate(item.id)}
+                      disabled={removeItem.isPending}
+                      className="mt-5 text-sm text-red-400 transition hover:text-red-300 disabled:opacity-50"
                     >
                       Remove
                     </button>
                   </div>
-
                 </div>
               </div>
             ))}
-
           </div>
 
           {/* Order Summary */}
           <div className="h-fit rounded-xl border border-white/10 bg-zinc-900 p-6">
-
             <h2 className="text-xl font-bold">
               Order Summary
             </h2>
 
             <div className="mt-6 flex justify-between text-gray-400">
-              <span>Items ({cartItems.reduce((total, item) => total + item.quantity, 0)})</span>
+              <span>Items ({totalItems})</span>
               <span>${subtotal.toFixed(2)}</span>
             </div>
 
             <div className="mt-4 border-t border-white/10 pt-5">
               <div className="flex justify-between text-lg font-bold">
                 <span>Subtotal</span>
+
                 <span className="text-purple-400">
                   ${subtotal.toFixed(2)}
                 </span>
@@ -194,9 +269,7 @@ function Cart() {
             >
               Continue Shopping
             </Link>
-
           </div>
-
         </div>
       </div>
     </section>
