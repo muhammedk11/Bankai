@@ -1,22 +1,31 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { addOrder } from "../store/slices/orderSlice";
-import { clearCart } from "../store/slices/cartSlice";
+import api from "../services/api";
+import { useCart } from "../hooks/useCart";
+import { useProducts } from "../hooks/useProducts";
 
 function Checkout() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const cartItems = useSelector((state) => state.cart.items);
   const user = useSelector((state) => state.auth.user);
 
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  const {
+    cart,
+    isLoading: cartLoading,
+    isError: cartError,
+    clearCart,
+  } = useCart(user?.id);
+
+  const {
+    data: products = [],
+    isLoading: productsLoading,
+    isError: productsError,
+  } = useProducts();
 
   const [formData, setFormData] = useState({
     fullName: user?.name || "",
@@ -29,6 +38,56 @@ function Checkout() {
     paymentMethod: "cod",
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const cartItems = (cart?.items || [])
+    .map((item) => {
+      const product = products.find(
+        (product) => String(product.id) === String(item.productId)
+      );
+
+      if (!product) return null;
+
+      return {
+        ...product,
+        quantity: item.quantity,
+      };
+    })
+    .filter(Boolean);
+
+  const subtotal = cartItems.reduce(
+    (total, item) => total + Number(item.price) * item.quantity,
+    0
+  );
+
+  const placeOrder = useMutation({
+    mutationFn: async (orders) => {
+      const responses = await Promise.all(
+        orders.map((order) => api.post("/orders", order))
+      );
+
+      return responses;
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["orders", user?.id],
+      });
+
+      clearCart.mutate(undefined, {
+        onSuccess: () => navigate("/orders"),
+        onError: () =>
+          setErrorMessage(
+            "Orders were placed, but your cart could not be cleared."
+          ),
+      });
+    },
+
+    onError: () => {
+      setErrorMessage("Could not place your orders. Please try again.");
+    },
+  });
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -38,21 +97,61 @@ function Checkout() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrorMessage("");
 
-    const order = {
-      id: Date.now(),
-      items: cartItems,
+    if (!user?.id || cartItems.length === 0) return;
+
+    const orderDate = new Date().toISOString();
+
+    const orders = cartItems.map((item, index) => ({
+      id: `ORD-${Date.now()}-${index + 1}`,
+      userId: user.id,
+
+      items: [
+        {
+          productId: String(item.id),
+          name: item.name,
+          image: item.image,
+          price: Number(item.price),
+          quantity: item.quantity,
+        },
+      ],
+
       shippingDetails: formData,
-      total: subtotal,
+      total: Number(item.price) * item.quantity,
       status: "Placed",
-      date: new Date().toISOString(),
-    };
+      date: orderDate,
+    }));
 
-    dispatch(addOrder(order));
-    dispatch(clearCart());
-
-    navigate("/orders");
+    placeOrder.mutate(orders);
   };
+
+  if (!user?.id) {
+    return (
+      <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
+        <h1 className="text-3xl font-bold">Please Login</h1>
+        <Link to="/login" className="mt-6 rounded-lg bg-purple-600 px-6 py-3">
+          Login
+        </Link>
+      </section>
+    );
+  }
+
+  if (cartLoading || productsLoading) {
+    return (
+      <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
+        Loading checkout...
+      </section>
+    );
+  }
+
+  if (cartError || productsError) {
+    return (
+      <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
+        Could not load checkout details.
+      </section>
+    );
+  }
 
   if (cartItems.length === 0) {
     return (
@@ -74,24 +173,19 @@ function Checkout() {
   return (
     <section className="min-h-screen bg-zinc-950 px-8 py-16 text-white">
       <div className="mx-auto max-w-7xl">
-
         <h1 className="mb-10 text-4xl font-bold">
           Checkout
         </h1>
 
         <form onSubmit={handleSubmit}>
-
           <div className="grid grid-cols-3 gap-10">
-
             {/* Shipping Information */}
             <div className="col-span-2 rounded-xl border border-white/10 bg-zinc-900 p-8">
-
               <h2 className="mb-6 text-2xl font-semibold">
                 Shipping Information
               </h2>
 
               <div className="grid grid-cols-2 gap-5">
-
                 {[
                   { name: "fullName", label: "Full Name", type: "text" },
                   { name: "email", label: "Email", type: "email" },
@@ -130,7 +224,6 @@ function Checkout() {
                     className="w-full rounded-lg border border-white/10 bg-zinc-800 px-4 py-3 outline-none focus:border-purple-500"
                   />
                 </div>
-
               </div>
 
               {/* Payment Method */}
@@ -139,7 +232,6 @@ function Checkout() {
               </h2>
 
               <div className="space-y-4">
-
                 <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-white/10 bg-zinc-800 p-4">
                   <input
                     type="radio"
@@ -161,24 +253,20 @@ function Checkout() {
                   />
                   <span>Online Payment (Demo)</span>
                 </label>
-
               </div>
 
               <p className="mt-4 text-sm text-gray-500">
                 Payments are not processed in this demo application.
               </p>
-
             </div>
 
             {/* Order Summary */}
             <div className="h-fit rounded-xl border border-white/10 bg-zinc-900 p-6">
-
               <h2 className="text-xl font-bold">
                 Order Summary
               </h2>
 
               <div className="mt-6 space-y-4">
-
                 {cartItems.map((item) => (
                   <div
                     key={item.id}
@@ -189,15 +277,13 @@ function Checkout() {
                     </span>
 
                     <span>
-                      ${(item.price * item.quantity).toFixed(2)}
+                      ${(Number(item.price) * item.quantity).toFixed(2)}
                     </span>
                   </div>
                 ))}
-
               </div>
 
               <div className="mt-6 border-t border-white/10 pt-5">
-
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total</span>
 
@@ -205,7 +291,6 @@ function Checkout() {
                     ${subtotal.toFixed(2)}
                   </span>
                 </div>
-
               </div>
 
               <Link
@@ -214,21 +299,25 @@ function Checkout() {
               >
                 Back to Cart
               </Link>
-
             </div>
-
           </div>
 
-          {/* Place Order — Outside Grid */}
+          {errorMessage && (
+            <p className="mt-5 text-center text-red-400">
+              {errorMessage}
+            </p>
+          )}
+
           <button
             type="submit"
-            className="mt-8 w-full rounded-lg bg-purple-600 px-8 py-4 font-semibold transition hover:bg-purple-700"
+            disabled={placeOrder.isPending || clearCart.isPending}
+            className="mt-8 w-full rounded-lg bg-purple-600 px-8 py-4 font-semibold transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Place Order
+            {placeOrder.isPending || clearCart.isPending
+              ? "Placing Orders..."
+              : "Place Order"}
           </button>
-
         </form>
-
       </div>
     </section>
   );
