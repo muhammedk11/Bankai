@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import api from "../services/api";
 
@@ -8,5 +9,6 @@ export const useProducts = () => {
       const response = await api.get("/products");
       return response.data;
     },
+    retry: 2,
   });
 };

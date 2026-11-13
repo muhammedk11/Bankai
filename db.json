@@ -114,7 +114,9 @@
   "wishlists": [
     {
       "userId": "lVPO-pOXZ0M",
-      "productIds": [],
+      "productIds": [
+        "2"
+      ],
       "id": "3TfGxR3eIKo"
     },
     {
@@ -123,6 +125,33 @@
       "id": "L568brq3q0E"
     }
   ],
-  "orders": [],
+  "orders": [
+    {
+      "id": "QPWQljzukHo",
+      "userId": "lVPO-pOXZ0M",
+      "items": [
+        {
+          "productId": "1",
+          "name": "Armored Titan Figure",
+          "image": "/images/products/attack-on-titan-armored-titan-figure/front.png",
+          "price": 89.99,
+          "quantity": 1
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "muhammed",
+        "email": "muhammed011@gmail.com",
+        "phone": "0123654789",
+        "address": "sdfghjk",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "cod"
+      },
+      "total": 89.99,
+      "status": "Placed",
+      "date": "2026-11-13T13:58:10.094Z"
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }

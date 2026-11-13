@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -13,12 +12,16 @@ function Wishlist() {
     data: products = [],
     isLoading: productsLoading,
     isError: productsError,
+    refetch: refetchProducts,
+    isFetching: productsFetching,
   } = useProducts();
 
   const {
     wishlist,
     isLoading: wishlistLoading,
     isError: wishlistError,
+    refetch: refetchWishlist,
+    isFetching: wishlistFetching,
     removeItem,
     clearWishlist,
   } = useWishlist(user?.id);
@@ -44,12 +47,18 @@ function Wishlist() {
     );
   };
 
+  const handleRetry = () => {
+    refetchProducts();
+    refetchWishlist();
+  };
+
   if (!user?.id) {
     return (
       <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 px-8 text-white">
         <h1 className="text-4xl font-bold">
           Login to View Your Wishlist
         </h1>
+
         <Link
           to="/login"
           className="mt-8 rounded-lg bg-purple-600 px-8 py-3 font-semibold hover:bg-purple-700"
@@ -69,9 +78,21 @@ function Wishlist() {
   }
 
   if (productsError || wishlistError) {
+    const isRetrying = productsFetching || wishlistFetching;
+
     return (
-      <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-red-400">
-        Could not load wishlist. Please try again.
+      <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
+        <p className="mb-5 text-red-400">
+          Could not load wishlist. Please try again.
+        </p>
+
+        <button
+          onClick={handleRetry}
+          disabled={isRetrying}
+          className="rounded-lg bg-purple-600 px-6 py-3 font-semibold hover:bg-purple-700 disabled:opacity-50"
+        >
+          {isRetrying ? "Retrying..." : "Try Again"}
+        </button>
       </section>
     );
   }
@@ -82,9 +103,11 @@ function Wishlist() {
         <h1 className="text-4xl font-bold">
           Your Wishlist is Empty
         </h1>
+
         <p className="mt-4 text-gray-400">
           Save your favourite anime products here.
         </p>
+
         <Link
           to="/products"
           className="mt-8 rounded-lg bg-purple-600 px-8 py-3 font-semibold hover:bg-purple-700"
@@ -94,6 +117,11 @@ function Wishlist() {
       </section>
     );
   }
+
+  const hasMutationError =
+    addToCart.isError ||
+    removeItem.isError ||
+    clearWishlist.isError;
 
   return (
     <section className="min-h-screen bg-zinc-950 px-8 py-16 text-white">
@@ -123,6 +151,12 @@ function Wishlist() {
               : "Clear Wishlist"}
           </button>
         </div>
+
+        {hasMutationError && (
+          <p className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
+            An action failed. Please try again.
+          </p>
+        )}
 
         <div className="grid grid-cols-4 gap-8">
           {wishlistItems.map((product) => (
@@ -173,10 +207,15 @@ function Wishlist() {
 
                 <button
                   onClick={() => removeItem.mutate(product.id)}
-                  disabled={removeItem.isPending}
+                  disabled={
+                    removeItem.isPending ||
+                    addToCart.isPending
+                  }
                   className="mt-3 w-full text-sm text-red-400 hover:text-red-300 disabled:opacity-50"
                 >
-                  Remove
+                  {removeItem.isPending
+                    ? "Removing..."
+                    : "Remove"}
                 </button>
               </div>
             </div>

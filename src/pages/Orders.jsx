@@ -18,6 +18,8 @@ function Orders() {
     data: orders = [],
     isLoading,
     isError,
+    refetch,
+    isFetching,
   } = useQuery({
     queryKey: ["orders", user?.id],
     enabled: Boolean(user?.id),
@@ -28,6 +30,7 @@ function Orders() {
 
       return response.data;
     },
+    retry: 2,
   });
 
   // Delete an order
@@ -80,8 +83,18 @@ function Orders() {
 
   if (isError) {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-red-400">
-        Could not load your orders. Please try again.
+      <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
+        <p className="mb-5 text-red-400">
+          Could not load your orders. Please try again.
+        </p>
+
+        <button
+          onClick={() => refetch()}
+          disabled={isFetching}
+          className="rounded-lg bg-purple-600 px-6 py-3 font-semibold hover:bg-purple-700 disabled:opacity-50"
+        >
+          {isFetching ? "Retrying..." : "Try Again"}
+        </button>
       </section>
     );
   }
@@ -123,6 +136,12 @@ function Orders() {
             Track and view your previous purchases.
           </p>
         </div>
+
+        {deleteOrder.isError && (
+          <p className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
+            Could not delete the order. Please try again.
+          </p>
+        )}
 
         <div className="space-y-8">
           {orders.map((order) => (

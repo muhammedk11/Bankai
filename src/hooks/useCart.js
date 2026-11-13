@@ -1,5 +1,10 @@
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+
 import api from "../services/api";
 
 export const useCart = (userId) => {
@@ -18,6 +23,7 @@ export const useCart = (userId) => {
 
       return response.data[0] || null;
     },
+    retry: 2,
   });
 
   // Get the latest cart record from the server
@@ -37,7 +43,7 @@ export const useCart = (userId) => {
   // Add a product to the cart
   const addItem = useMutation({
     mutationFn: async ({ product, quantity }) => {
-      let cart = await getCartRecord();
+      const cart = await getCartRecord();
 
       const productId = String(product.id);
       const items = cart?.items || [];
@@ -65,7 +71,10 @@ export const useCart = (userId) => {
           ...items,
           {
             productId,
-            quantity: Math.min(quantity, Number(product.stock)),
+            quantity: Math.min(
+              quantity,
+              Number(product.stock)
+            ),
           },
         ];
       }
@@ -146,10 +155,12 @@ export const useCart = (userId) => {
     cart: cartQuery.data,
     isLoading: cartQuery.isLoading,
     isError: cartQuery.isError,
+    refetch: cartQuery.refetch,
+    isFetching: cartQuery.isFetching,
+
     addItem,
     updateItem,
     removeItem,
     clearCart,
   };
 };
-

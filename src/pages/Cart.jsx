@@ -12,6 +12,8 @@ function Cart() {
     cart,
     isLoading: cartLoading,
     isError: cartError,
+    refetch: refetchCart,
+    isFetching: cartFetching,
     updateItem,
     removeItem,
     clearCart,
@@ -21,10 +23,18 @@ function Cart() {
     data: products = [],
     isLoading: productsLoading,
     isError: productsError,
+    refetch: refetchProducts,
+    isFetching: productsFetching,
   } = useProducts();
 
   const isLoading = cartLoading || productsLoading;
   const isError = cartError || productsError;
+  const isFetching = cartFetching || productsFetching;
+
+  const handleRetry = () => {
+    refetchCart();
+    refetchProducts();
+  };
 
   // Match cart product IDs with actual product details
   const cartItems = (cart?.items || [])
@@ -87,10 +97,18 @@ function Cart() {
 
   if (isError) {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
+      <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
         <p className="text-lg text-red-400">
           Failed to load your cart. Please try again.
         </p>
+
+        <button
+          onClick={handleRetry}
+          disabled={isFetching}
+          className="mt-6 rounded-lg bg-purple-600 px-6 py-3 font-semibold hover:bg-purple-700 disabled:opacity-50"
+        >
+          {isFetching ? "Retrying..." : "Try Again"}
+        </button>
       </section>
     );
   }
@@ -140,6 +158,15 @@ function Cart() {
             {clearCart.isPending ? "Clearing..." : "Clear Cart"}
           </button>
         </div>
+
+        {/* Mutation Error Messages */}
+        {(updateItem.isError ||
+          removeItem.isError ||
+          clearCart.isError) && (
+          <p className="mb-6 rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
+            Could not update your cart. Please try again.
+          </p>
+        )}
 
         <div className="grid grid-cols-3 gap-10">
 
@@ -223,7 +250,7 @@ function Cart() {
                       disabled={removeItem.isPending}
                       className="mt-5 text-sm text-red-400 transition hover:text-red-300 disabled:opacity-50"
                     >
-                      Remove
+                      {removeItem.isPending ? "Removing..." : "Remove"}
                     </button>
                   </div>
                 </div>

@@ -18,6 +18,8 @@ function Checkout() {
     cart,
     isLoading: cartLoading,
     isError: cartError,
+    refetch: refetchCart,
+    isFetching: cartFetching,
     clearCart,
   } = useCart(user?.id);
 
@@ -25,6 +27,8 @@ function Checkout() {
     data: products = [],
     isLoading: productsLoading,
     isError: productsError,
+    refetch: refetchProducts,
+    isFetching: productsFetching,
   } = useProducts();
 
   const [formData, setFormData] = useState({
@@ -39,6 +43,7 @@ function Checkout() {
   });
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
   const cartItems = (cart?.items || [])
     .map((item) => {
@@ -70,21 +75,28 @@ function Checkout() {
     },
 
     onSuccess: () => {
+      setOrderPlaced(true);
+
       queryClient.invalidateQueries({
         queryKey: ["orders", user?.id],
       });
 
       clearCart.mutate(undefined, {
-        onSuccess: () => navigate("/orders"),
-        onError: () =>
+        onSuccess: () => {
+          navigate("/orders");
+        },
+        onError: () => {
           setErrorMessage(
-            "Orders were placed, but your cart could not be cleared."
-          ),
+            "Your orders were placed successfully, but your cart could not be cleared. Try clearing it again."
+          );
+        },
       });
     },
 
     onError: () => {
-      setErrorMessage("Could not place your orders. Please try again.");
+      setErrorMessage(
+        "Could not confirm all orders. Check your Orders page before trying again, as some orders may already have been created."
+      );
     },
   });
 
@@ -95,11 +107,39 @@ function Checkout() {
     });
   };
 
+  const handleRetry = () => {
+    refetchCart();
+    refetchProducts();
+  };
+
+  const handleClearCartRetry = () => {
+    setErrorMessage("");
+
+    clearCart.mutate(undefined, {
+      onSuccess: () => {
+        navigate("/orders");
+      },
+      onError: () => {
+        setErrorMessage(
+          "Could not clear your cart. Please try again."
+        );
+      },
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMessage("");
 
-    if (!user?.id || cartItems.length === 0) return;
+    if (
+      !user?.id ||
+      cartItems.length === 0 ||
+      orderPlaced ||
+      placeOrder.isPending ||
+      clearCart.isPending
+    ) {
+      return;
+    }
 
     const orderDate = new Date().toISOString();
 
@@ -130,7 +170,11 @@ function Checkout() {
     return (
       <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
         <h1 className="text-3xl font-bold">Please Login</h1>
-        <Link to="/login" className="mt-6 rounded-lg bg-purple-600 px-6 py-3">
+
+        <Link
+          to="/login"
+          className="mt-6 rounded-lg bg-purple-600 px-6 py-3"
+        >
           Login
         </Link>
       </section>
@@ -146,9 +190,21 @@ function Checkout() {
   }
 
   if (cartError || productsError) {
+    const isRetrying = cartFetching || productsFetching;
+
     return (
-      <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
-        Could not load checkout details.
+      <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
+        <p className="mb-5 text-red-400">
+          Could not load checkout details.
+        </p>
+
+        <button
+          onClick={handleRetry}
+          disabled={isRetrying}
+          className="rounded-lg bg-purple-600 px-6 py-3 font-semibold hover:bg-purple-700 disabled:opacity-50"
+        >
+          {isRetrying ? "Retrying..." : "Try Again"}
+        </button>
       </section>
     );
   }
@@ -240,6 +296,7 @@ function Checkout() {
                     checked={formData.paymentMethod === "cod"}
                     onChange={handleChange}
                   />
+
                   <span>Cash on Delivery (Demo)</span>
                 </label>
 
@@ -251,6 +308,7 @@ function Checkout() {
                     checked={formData.paymentMethod === "online"}
                     onChange={handleChange}
                   />
+
                   <span>Online Payment (Demo)</span>
                 </label>
               </div>
@@ -308,15 +366,31 @@ function Checkout() {
             </p>
           )}
 
-          <button
-            type="submit"
-            disabled={placeOrder.isPending || clearCart.isPending}
-            className="mt-8 w-full rounded-lg bg-purple-600 px-8 py-4 font-semibold transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {placeOrder.isPending || clearCart.isPending
-              ? "Placing Orders..."
-              : "Place Order"}
-          </button>
+          {orderPlaced ? (
+            <button
+              type="button"
+              onClick={handleClearCartRetry}
+              disabled={clearCart.isPending}
+              className="mt-8 w-full rounded-lg bg-purple-600 px-8 py-4 font-semibold transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {clearCart.isPending
+                ? "Clearing Cart..."
+                : "Retry Clearing Cart"}
+            </button>
+          ) : (
+            <button
+              type="submit"
+              disabled={
+                placeOrder.isPending ||
+                clearCart.isPending
+              }
+              className="mt-8 w-full rounded-lg bg-purple-600 px-8 py-4 font-semibold transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {placeOrder.isPending
+                ? "Placing Orders..."
+                : "Place Order"}
+            </button>
+          )}
         </form>
       </div>
     </section>

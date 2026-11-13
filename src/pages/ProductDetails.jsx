@@ -17,12 +17,15 @@ function ProductDetails() {
     data: product,
     isLoading,
     isError,
+    refetch,
+    isFetching,
   } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
       const response = await api.get(`/products/${id}`);
       return response.data;
     },
+    retry: 2,
   });
 
   // Backend cart
@@ -47,12 +50,55 @@ function ProductDetails() {
     );
   }
 
-  if (isError || !product) {
+  // API Error
+  if (isError) {
     return (
       <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">Product Not Found</h1>
-          <Link to="/products" className="mt-6 inline-block text-purple-400">
+          <h1 className="text-2xl font-bold">
+            Failed to Load Product
+          </h1>
+
+          <p className="mt-3 text-gray-400">
+            Something went wrong. Please try again.
+          </p>
+
+          <button
+            onClick={() => refetch()}
+            disabled={isFetching}
+            className="mt-6 rounded-lg bg-purple-600 px-6 py-3 font-semibold hover:bg-purple-700 disabled:opacity-50"
+          >
+            {isFetching ? "Retrying..." : "Try Again"}
+          </button>
+
+          <Link
+            to="/products"
+            className="mt-4 block text-purple-400"
+          >
+            Back to Products
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
+  // Product Not Found
+  if (!product || product.id == null) {
+    return (
+      <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold">
+            Product Not Found
+          </h1>
+
+          <p className="mt-3 text-gray-400">
+            The product you're looking for doesn't exist.
+          </p>
+
+          <Link
+            to="/products"
+            className="mt-6 inline-block text-purple-400"
+          >
             Back to Products
           </Link>
         </div>
@@ -93,6 +139,7 @@ function ProductDetails() {
   return (
     <section className="min-h-screen bg-zinc-950 px-8 py-16 text-white">
       <div className="mx-auto grid max-w-7xl grid-cols-2 gap-16">
+
         {/* Product Images */}
         <div>
           <div className="flex h-[550px] items-center justify-center rounded-2xl bg-zinc-900 p-10">
@@ -130,7 +177,9 @@ function ProductDetails() {
             {product.anime}
           </p>
 
-          <h1 className="mt-3 text-4xl font-bold">{product.name}</h1>
+          <h1 className="mt-3 text-4xl font-bold">
+            {product.name}
+          </h1>
 
           <p className="mt-5 text-3xl font-bold text-purple-400">
             ${Number(product.price).toFixed(2)}
@@ -162,7 +211,9 @@ function ProductDetails() {
                     −
                   </button>
 
-                  <span className="min-w-14 text-center">{quantity}</span>
+                  <span className="min-w-14 text-center">
+                    {quantity}
+                  </span>
 
                   <button
                     onClick={() =>

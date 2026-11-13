@@ -3,19 +3,38 @@ import { useSearchParams, Link } from "react-router-dom";
 import { useProducts } from "../hooks/useProducts";
 
 function Products() {
-  const { data: products = [], isLoading, isError } = useProducts();
+  const {
+    data: products = [],
+    isLoading,
+    isError,
+    refetch,
+    isFetching,
+  } = useProducts();
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedAnime = searchParams.get("anime") || "";
   const selectedType = searchParams.get("type") || "";
 
   if (isLoading) {
-  return <p className="p-8 text-center">Loading products...</p>;
-}
+    return <p className="p-8 text-center">Loading products...</p>;
+  }
 
-if (isError) {
-  return <p className="p-8 text-center">Failed to load products.</p>;
-}
+  if (isError) {
+    return (
+      <div className="p-8 text-center">
+        <p className="mb-4">Failed to load products.</p>
+
+        <button
+          onClick={() => refetch()}
+          disabled={isFetching}
+          className="rounded-lg bg-purple-600 px-5 py-2 text-white hover:bg-purple-700 disabled:opacity-50"
+        >
+          {isFetching ? "Retrying..." : "Try Again"}
+        </button>
+      </div>
+    );
+  }
 
   const filteredProducts = products.filter((product) => {
     const animeMatch =

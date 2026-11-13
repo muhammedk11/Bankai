@@ -1,5 +1,9 @@
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../services/api";
 
 export const useWishlist = (userId) => {
@@ -18,6 +22,7 @@ export const useWishlist = (userId) => {
 
       return response.data[0] || null;
     },
+    retry: 2,
   });
 
   // Get the latest wishlist record
@@ -29,6 +34,7 @@ export const useWishlist = (userId) => {
     return response.data[0] || null;
   };
 
+  // Refresh wishlist after a successful change
   const refreshWishlist = () => {
     queryClient.invalidateQueries({ queryKey });
   };
@@ -98,9 +104,11 @@ export const useWishlist = (userId) => {
     wishlist: wishlistQuery.data,
     isLoading: wishlistQuery.isLoading,
     isError: wishlistQuery.isError,
+    refetch: wishlistQuery.refetch,
+    isFetching: wishlistQuery.isFetching,
+
     addItem,
     removeItem,
     clearWishlist,
   };
 };
-
