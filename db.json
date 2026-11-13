@@ -91,11 +91,26 @@
   "carts": [
     {
       "userId": "lVPO-pOXZ0M",
-      "items": [],
+      "items": [
+        {
+          "productId": "1",
+          "quantity": 2
+        },
+        {
+          "productId": "3",
+          "quantity": 1
+        }
+      ],
       "id": "YA2c-jueIAQ"
     }
   ],
-  "wishlists": [],
+  "wishlists": [
+    {
+      "userId": "lVPO-pOXZ0M",
+      "productIds": [],
+      "id": "3TfGxR3eIKo"
+    }
+  ],
   "orders": [],
   "$schema": "./node_modules/json-server/schema.json"
 }

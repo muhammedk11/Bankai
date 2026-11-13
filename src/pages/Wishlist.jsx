@@ -1,25 +1,80 @@
 
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
-import { removeFromWishlist, clearWishlist } from "../store/slices/wishlistSlice";
-import { addToCart } from "../store/slices/cartSlice";
+import { useProducts } from "../hooks/useProducts";
+import { useWishlist } from "../hooks/useWishlist";
+import { useCart } from "../hooks/useCart";
 
 function Wishlist() {
-  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
 
-  const wishlistItems = useSelector(
-    (state) => state.wishlist.items
-  );
+  const {
+    data: products = [],
+    isLoading: productsLoading,
+    isError: productsError,
+  } = useProducts();
+
+  const {
+    wishlist,
+    isLoading: wishlistLoading,
+    isError: wishlistError,
+    removeItem,
+    clearWishlist,
+  } = useWishlist(user?.id);
+
+  const { addItem: addToCart } = useCart(user?.id);
+
+  const wishlistItems = (wishlist?.productIds || [])
+    .map((id) =>
+      products.find(
+        (product) => String(product.id) === String(id)
+      )
+    )
+    .filter(Boolean);
 
   const handleAddToCart = (product) => {
-    dispatch(addToCart({
-      product,
-      quantity: 1,
-    }));
-
-    dispatch(removeFromWishlist(product.id));
+    addToCart.mutate(
+      { product, quantity: 1 },
+      {
+        onSuccess: () => {
+          removeItem.mutate(product.id);
+        },
+      }
+    );
   };
+
+  if (!user?.id) {
+    return (
+      <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 px-8 text-white">
+        <h1 className="text-4xl font-bold">
+          Login to View Your Wishlist
+        </h1>
+        <Link
+          to="/login"
+          className="mt-8 rounded-lg bg-purple-600 px-8 py-3 font-semibold hover:bg-purple-700"
+        >
+          Login
+        </Link>
+      </section>
+    );
+  }
+
+  if (productsLoading || wishlistLoading) {
+    return (
+      <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
+        Loading wishlist...
+      </section>
+    );
+  }
+
+  if (productsError || wishlistError) {
+    return (
+      <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-red-400">
+        Could not load wishlist. Please try again.
+      </section>
+    );
+  }
 
   if (wishlistItems.length === 0) {
     return (
@@ -27,11 +82,9 @@ function Wishlist() {
         <h1 className="text-4xl font-bold">
           Your Wishlist is Empty
         </h1>
-
         <p className="mt-4 text-gray-400">
           Save your favourite anime products here.
         </p>
-
         <Link
           to="/products"
           className="mt-8 rounded-lg bg-purple-600 px-8 py-3 font-semibold hover:bg-purple-700"
@@ -45,8 +98,6 @@ function Wishlist() {
   return (
     <section className="min-h-screen bg-zinc-950 px-8 py-16 text-white">
       <div className="mx-auto max-w-7xl">
-
-        {/* Heading */}
         <div className="mb-10 flex items-center justify-between">
           <div>
             <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-purple-400">
@@ -63,16 +114,17 @@ function Wishlist() {
           </div>
 
           <button
-            onClick={() => dispatch(clearWishlist())}
-            className="text-sm text-red-400 transition hover:text-red-300"
+            onClick={() => clearWishlist.mutate()}
+            disabled={clearWishlist.isPending}
+            className="text-sm text-red-400 transition hover:text-red-300 disabled:opacity-50"
           >
-            Clear Wishlist
+            {clearWishlist.isPending
+              ? "Clearing..."
+              : "Clear Wishlist"}
           </button>
         </div>
 
-        {/* Products Grid */}
         <div className="grid grid-cols-4 gap-8">
-
           {wishlistItems.map((product) => (
             <div
               key={product.id}
@@ -89,7 +141,6 @@ function Wishlist() {
               </Link>
 
               <div className="p-5">
-
                 <p className="text-xs uppercase tracking-wider text-purple-400">
                   {product.anime}
                 </p>
@@ -101,36 +152,39 @@ function Wishlist() {
                 </Link>
 
                 <p className="mt-3 text-xl font-bold text-purple-400">
-                  ${product.price.toFixed(2)}
+                  ${Number(product.price).toFixed(2)}
                 </p>
 
                 <button
                   onClick={() => handleAddToCart(product)}
-                  disabled={product.stock <= 0}
+                  disabled={
+                    product.stock <= 0 ||
+                    addToCart.isPending ||
+                    removeItem.isPending
+                  }
                   className="mt-5 w-full rounded-lg bg-purple-600 px-4 py-3 font-semibold transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
+                  {product.stock <= 0
+                    ? "Out of Stock"
+                    : addToCart.isPending
+                      ? "Adding..."
+                      : "Add to Cart"}
                 </button>
 
                 <button
-                  onClick={() =>
-                    dispatch(removeFromWishlist(product.id))
-                  }
-                  className="mt-3 w-full text-sm text-red-400 hover:text-red-300"
+                  onClick={() => removeItem.mutate(product.id)}
+                  disabled={removeItem.isPending}
+                  className="mt-3 w-full text-sm text-red-400 hover:text-red-300 disabled:opacity-50"
                 >
                   Remove
                 </button>
-
               </div>
             </div>
           ))}
-
         </div>
-
       </div>
     </section>
   );
 }
 
 export default Wishlist;
-  

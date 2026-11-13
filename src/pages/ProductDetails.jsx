@@ -1,27 +1,18 @@
 
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 
 import api from "../services/api";
 import { useCart } from "../hooks/useCart";
-import {
-  addToWishlist,
-  removeFromWishlist,
-} from "../store/slices/wishlistSlice";
+import { useWishlist } from "../hooks/useWishlist";
 
 function ProductDetails() {
   const { id } = useParams();
-  const dispatch = useDispatch();
-
   const user = useSelector((state) => state.auth.user);
 
-  const wishlistItems = useSelector(
-    (state) => state.wishlist.items
-  );
-
-  // Fetch product from JSON Server
+  // Fetch product
   const {
     data: product,
     isLoading,
@@ -36,6 +27,13 @@ function ProductDetails() {
 
   // Backend cart
   const { addItem } = useCart(user?.id);
+
+  // Backend wishlist
+  const {
+    wishlist,
+    addItem: addToWishlist,
+    removeItem: removeFromWishlist,
+  } = useWishlist(user?.id);
 
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
@@ -53,14 +51,8 @@ function ProductDetails() {
     return (
       <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">
-            Product Not Found
-          </h1>
-
-          <Link
-            to="/products"
-            className="mt-6 inline-block text-purple-400"
-          >
+          <h1 className="text-3xl font-bold">Product Not Found</h1>
+          <Link to="/products" className="mt-6 inline-block text-purple-400">
             Back to Products
           </Link>
         </div>
@@ -68,15 +60,19 @@ function ProductDetails() {
     );
   }
 
-  const isWishlisted = wishlistItems.some(
-    (item) => String(item.id) === String(product.id)
+  const wishlistIds = wishlist?.productIds || [];
+
+  const isWishlisted = wishlistIds.some(
+    (itemId) => String(itemId) === String(product.id)
   );
 
   const handleWishlist = () => {
+    if (!user?.id) return;
+
     if (isWishlisted) {
-      dispatch(removeFromWishlist(product.id));
+      removeFromWishlist.mutate(product.id);
     } else {
-      dispatch(addToWishlist(product));
+      addToWishlist.mutate(product.id);
     }
   };
 
@@ -86,17 +82,17 @@ function ProductDetails() {
     addItem.mutate(
       { product, quantity },
       {
-        onSuccess: () => {
-          setAdded(true);
-        },
+        onSuccess: () => setAdded(true),
       }
     );
   };
 
+  const wishlistPending =
+    addToWishlist.isPending || removeFromWishlist.isPending;
+
   return (
     <section className="min-h-screen bg-zinc-950 px-8 py-16 text-white">
       <div className="mx-auto grid max-w-7xl grid-cols-2 gap-16">
-
         {/* Product Images */}
         <div>
           <div className="flex h-[550px] items-center justify-center rounded-2xl bg-zinc-900 p-10">
@@ -134,9 +130,7 @@ function ProductDetails() {
             {product.anime}
           </p>
 
-          <h1 className="mt-3 text-4xl font-bold">
-            {product.name}
-          </h1>
+          <h1 className="mt-3 text-4xl font-bold">{product.name}</h1>
 
           <p className="mt-5 text-3xl font-bold text-purple-400">
             ${Number(product.price).toFixed(2)}
@@ -156,25 +150,19 @@ function ProductDetails() {
           {product.stock > 0 && (
             <>
               <div className="mt-8">
-                <p className="mb-3 font-semibold">
-                  Quantity
-                </p>
+                <p className="mb-3 font-semibold">Quantity</p>
 
                 <div className="flex w-fit items-center overflow-hidden rounded-lg border border-white/10">
                   <button
                     onClick={() =>
-                      setQuantity((prev) =>
-                        Math.max(1, prev - 1)
-                      )
+                      setQuantity((prev) => Math.max(1, prev - 1))
                     }
                     className="px-5 py-3 hover:bg-zinc-800"
                   >
                     −
                   </button>
 
-                  <span className="min-w-14 text-center">
-                    {quantity}
-                  </span>
+                  <span className="min-w-14 text-center">{quantity}</span>
 
                   <button
                     onClick={() =>
@@ -228,12 +216,23 @@ function ProductDetails() {
           {/* Wishlist */}
           <button
             onClick={handleWishlist}
-            className="mt-4 w-full rounded-lg border border-white/20 px-6 py-4 font-semibold transition hover:border-purple-500 hover:text-purple-400"
+            disabled={!user?.id || wishlistPending}
+            className="mt-4 w-full rounded-lg border border-white/20 px-6 py-4 font-semibold transition hover:border-purple-500 hover:text-purple-400 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isWishlisted
-              ? "♥ Remove from Wishlist"
-              : "♡ Add to Wishlist"}
+            {!user?.id
+              ? "Login to Save"
+              : wishlistPending
+                ? "Updating..."
+                : isWishlisted
+                  ? "♥ Remove from Wishlist"
+                  : "♡ Add to Wishlist"}
           </button>
+
+          {(addToWishlist.isError || removeFromWishlist.isError) && (
+            <p className="mt-3 text-center text-sm text-red-400">
+              Could not update wishlist. Please try again.
+            </p>
+          )}
 
           <Link
             to="/products"
