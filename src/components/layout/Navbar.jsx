@@ -1,20 +1,44 @@
+
+import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
 import { useCart } from "../../hooks/useCart";
+import { useProducts } from "../../hooks/useProducts";
 
 function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { user, isAuthenticated } = useSelector(
     (state) => state.auth
   );
 
   const { cart } = useCart(user?.id);
+  const { data: products = [] } = useProducts();
 
-  // Calculate total quantity of all cart items
-const cartCount = (cart?.items || []).length;
+  // Number of unique products in the cart
+  const cartCount = (cart?.items || []).length;
+
+  // Filter products for live search suggestions
+  const searchResults = products
+    .filter((product) => {
+      const search = searchTerm.trim().toLowerCase();
+
+      if (!search) return false;
+
+      return [
+        product.name,
+        product.anime,
+        product.type,
+        product.description,
+      ].some((value) =>
+        String(value || "").toLowerCase().includes(search)
+      );
+    })
+    .slice(0, 5);
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -37,6 +61,17 @@ const cartCount = (cart?.items || []).length;
 
   const getTypePath = (type) => `/products?type=${type}`;
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+
+    const search = searchTerm.trim();
+
+    if (!search) return;
+
+    navigate(`/products?search=${encodeURIComponent(search)}`);
+    setSearchTerm("");
+  };
+
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
@@ -44,15 +79,96 @@ const cartCount = (cart?.items || []).length;
 
   return (
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-zinc-950 px-6 py-4 text-white">
-      <div className="mx-auto flex max-w-7xl items-center justify-between">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-8">
 
         {/* Logo */}
         <Link
           to="/"
-          className="text-2xl font-bold tracking-wider text-purple-500"
+          className="shrink-0 text-2xl font-bold tracking-wider text-purple-500"
         >
           BANKAI
         </Link>
+
+        {/* Search Bar */}
+        <form
+          onSubmit={handleSearchSubmit}
+          className="relative w-80 shrink-0"
+        >
+          <div className="flex items-center rounded-lg border border-white/10 bg-zinc-900 px-4 focus-within:border-purple-500">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="19"
+              height="19"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="shrink-0 text-gray-400"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search anime merchandise..."
+              className="w-full bg-transparent px-3 py-3 text-sm text-white outline-none placeholder:text-gray-500"
+            />
+          </div>
+
+          {/* Live Suggestions */}
+          {searchTerm.trim() && (
+            <div className="absolute left-0 top-full z-50 mt-2 w-full overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
+              {searchResults.length > 0 ? (
+                searchResults.map((product) => (
+                  <Link
+                    key={product.id}
+                    to={`/products/${product.id}`}
+                    onClick={() => setSearchTerm("")}
+                    className="flex items-center gap-3 border-b border-white/5 p-3 transition last:border-0 hover:bg-purple-600/10"
+                  >
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="h-12 w-12 rounded-lg bg-zinc-800 object-contain p-1"
+                    />
+
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold text-white">
+                        {product.name}
+                      </p>
+
+                      <p className="mt-1 text-xs text-gray-400">
+                        {product.anime}
+                      </p>
+                    </div>
+
+                    <p className="shrink-0 text-sm font-semibold text-purple-400">
+                      {product.price != null
+                        ? `$${Number(product.price).toFixed(2)}`
+                        : ""}
+                    </p>
+                  </Link>
+                ))
+              ) : (
+                <p className="p-4 text-center text-sm text-gray-400">
+                  No products found
+                </p>
+              )}
+
+              <button
+                type="submit"
+                className="w-full border-t border-white/10 px-4 py-3 text-sm font-semibold text-purple-400 transition hover:bg-purple-600/10"
+              >
+                View all results for "{searchTerm}"
+              </button>
+            </div>
+          )}
+        </form>
 
         {/* Navigation */}
         <div className="flex items-center gap-8">

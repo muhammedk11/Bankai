@@ -15,6 +15,7 @@ function Products() {
 
   const selectedAnime = searchParams.get("anime") || "";
   const selectedType = searchParams.get("type") || "";
+  const selectedSearch = searchParams.get("search") || "";
 
   if (isLoading) {
     return <p className="p-8 text-center">Loading products...</p>;
@@ -43,7 +44,20 @@ function Products() {
     const typeMatch =
       !selectedType || product.type === selectedType;
 
-    return animeMatch && typeMatch;
+    const search = selectedSearch.trim().toLowerCase();
+
+    const searchMatch =
+      !search ||
+      [
+        product.name,
+        product.anime,
+        product.type,
+        product.description,
+      ].some((value) =>
+        String(value || "").toLowerCase().includes(search)
+      );
+
+    return animeMatch && typeMatch && searchMatch;
   });
 
   const handleFilterChange = (filter, value) => {
@@ -122,6 +136,16 @@ function Products() {
           </button>
 
         </div>
+
+        {/* Active Search */}
+        {selectedSearch && (
+          <p className="mb-4 text-sm text-gray-400">
+            Search results for:{" "}
+            <span className="font-semibold text-purple-400">
+              {selectedSearch}
+            </span>
+          </p>
+        )}
 
         {/* Product Count */}
         <p className="mb-6 text-sm text-gray-400">
