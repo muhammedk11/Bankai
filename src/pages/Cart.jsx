@@ -1,11 +1,12 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { useProducts } from "../hooks/useProducts";
 import { useCart } from "../hooks/useCart";
 
 function Cart() {
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
 
   const {
@@ -34,6 +35,12 @@ function Cart() {
   const handleRetry = () => {
     refetchCart();
     refetchProducts();
+  };
+
+  const handleBuyNow = (item) => {
+    navigate(
+      `/checkout?buyNow=${item.id}&quantity=${item.quantity}&source=cart`
+    );
   };
 
   // Match cart product IDs with actual product details
@@ -239,16 +246,26 @@ function Cart() {
                     </div>
                   </div>
 
-                  {/* Item Total and Remove */}
+                  {/* Item Total and Actions */}
                   <div className="text-right">
                     <p className="font-semibold">
                       ${(Number(item.price) * item.quantity).toFixed(2)}
                     </p>
 
                     <button
+                      onClick={() => handleBuyNow(item)}
+                      disabled={
+                        Number(item.stock) < item.quantity
+                      }
+                      className="mt-4 block rounded-lg border border-purple-500 px-4 py-2 text-sm font-semibold text-purple-400 transition hover:bg-purple-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      Buy Now
+                    </button>
+
+                    <button
                       onClick={() => removeItem.mutate(item.id)}
                       disabled={removeItem.isPending}
-                      className="mt-5 text-sm text-red-400 transition hover:text-red-300 disabled:opacity-50"
+                      className="mt-3 block w-full text-sm text-red-400 transition hover:text-red-300 disabled:opacity-50"
                     >
                       {removeItem.isPending ? "Removing..." : "Remove"}
                     </button>

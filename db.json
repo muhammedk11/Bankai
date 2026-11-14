@@ -99,12 +99,8 @@
       "userId": "lVPO-pOXZ0M",
       "items": [
         {
-          "productId": "1",
-          "quantity": 1
-        },
-        {
           "productId": "2",
-          "quantity": 1
+          "quantity": 2
         }
       ],
       "id": "YA2c-jueIAQ"
@@ -160,6 +156,84 @@
       "total": 224.96999999999997,
       "status": "Placed",
       "date": "2026-11-14T04:47:10.649Z"
+    },
+    {
+      "id": "yG3a1tgrYZY",
+      "userId": "lVPO-pOXZ0M",
+      "items": [
+        {
+          "productId": "4",
+          "name": "Ryomen Sukuna Figure",
+          "image": "/images/products/jujutsu-kaisen-sukuna-figure/front.png",
+          "price": 74.99,
+          "quantity": 3
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "muhammed",
+        "email": "muhammed011@gmail.com",
+        "phone": "0123654789",
+        "address": "dfghjk,l cfvgbnm,. fg hjkl;",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "online"
+      },
+      "total": 224.96999999999997,
+      "status": "Placed",
+      "date": "2026-11-14T05:29:55.120Z"
+    },
+    {
+      "id": "SXynCPMNrr8",
+      "userId": "lVPO-pOXZ0M",
+      "items": [
+        {
+          "productId": "4",
+          "name": "Ryomen Sukuna Figure",
+          "image": "/images/products/jujutsu-kaisen-sukuna-figure/front.png",
+          "price": 74.99,
+          "quantity": 3
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "muhammed",
+        "email": "muhammed011@gmail.com",
+        "phone": "1236547890",
+        "address": "dfghjk dfghjk ghnjmk",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "online"
+      },
+      "total": 224.96999999999997,
+      "status": "Placed",
+      "date": "2026-11-14T05:37:37.074Z"
+    },
+    {
+      "id": "07O-E4_ooRA",
+      "userId": "lVPO-pOXZ0M",
+      "items": [
+        {
+          "productId": "2",
+          "name": "Mikasa Ackerman Figure",
+          "image": "/images/products/attack-on-titan-mikasa-figure/front.png",
+          "price": 64.99,
+          "quantity": 2
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "muhammed",
+        "email": "muhammed011@gmail.com",
+        "phone": "1236547890",
+        "address": "xcvbn gjkjk ghkjl",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "cod"
+      },
+      "total": 129.98,
+      "status": "Placed",
+      "date": "2026-11-14T05:38:19.852Z"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

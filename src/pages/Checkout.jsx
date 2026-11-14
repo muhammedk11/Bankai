@@ -1,6 +1,10 @@
 
 import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -17,7 +21,11 @@ function Checkout() {
 
   const buyNowProductId = searchParams.get("buyNow");
   const requestedQuantity = Number(searchParams.get("quantity")) || 1;
+
   const isBuyNow = Boolean(buyNowProductId);
+
+  const isCartBuyNow =
+    isBuyNow && searchParams.get("source") === "cart";
 
   const {
     cart,
@@ -26,6 +34,7 @@ function Checkout() {
     refetch: refetchCart,
     isFetching: cartFetching,
     clearCart,
+    removeItem,
   } = useCart(user?.id);
 
   const {
@@ -50,10 +59,12 @@ function Checkout() {
   const [errorMessage, setErrorMessage] = useState("");
   const [orderPlaced, setOrderPlaced] = useState(false);
 
+  // Normal cart items
   const cartItems = (cart?.items || [])
     .map((item) => {
       const product = products.find(
-        (product) => String(product.id) === String(item.productId)
+        (product) =>
+          String(product.id) === String(item.productId)
       );
 
       if (!product) return null;
@@ -65,9 +76,10 @@ function Checkout() {
     })
     .filter(Boolean);
 
-  // Select either one Buy Now product or the normal cart items
+  // Selected Buy Now product
   const selectedProduct = products.find(
-    (product) => String(product.id) === String(buyNowProductId)
+    (product) =>
+      String(product.id) === String(buyNowProductId)
   );
 
   const buyNowItems =
@@ -86,17 +98,40 @@ function Checkout() {
         ]
       : [];
 
-  const checkoutItems = isBuyNow ? buyNowItems : cartItems;
+  // Choose Buy Now item or normal cart items
+  const checkoutItems = isBuyNow
+    ? buyNowItems
+    : cartItems;
 
   const subtotal = checkoutItems.reduce(
-    (total, item) => total + Number(item.price) * item.quantity,
+    (total, item) =>
+      total + Number(item.price) * item.quantity,
     0
   );
 
+  // Remove a purchased cart item
+  const handleRemovePurchasedItem = () => {
+    setErrorMessage("");
+
+    removeItem.mutate(buyNowProductId, {
+      onSuccess: () => {
+        navigate("/orders");
+      },
+      onError: () => {
+        setErrorMessage(
+          "Order placed successfully, but the purchased item could not be removed from your cart. Please try again."
+        );
+      },
+    });
+  };
+
+  // Place orders
   const placeOrder = useMutation({
     mutationFn: async (orders) => {
       const responses = await Promise.all(
-        orders.map((order) => api.post("/orders", order))
+        orders.map((order) =>
+          api.post("/orders", order)
+        )
       );
 
       return responses;
@@ -109,13 +144,19 @@ function Checkout() {
         queryKey: ["orders", user?.id],
       });
 
-      // Buy Now must not modify the existing cart
+      // Buy Now from an individual cart item
+      if (isCartBuyNow) {
+        handleRemovePurchasedItem();
+        return;
+      }
+
+      // Buy Now from Product Details
       if (isBuyNow) {
         navigate("/orders");
         return;
       }
 
-      // Normal cart checkout clears the cart
+      // Normal checkout clears the entire cart
       clearCart.mutate(undefined, {
         onSuccess: () => {
           navigate("/orders");
@@ -150,8 +191,14 @@ function Checkout() {
     refetchProducts();
   };
 
-  const handleClearCartRetry = () => {
+  // Retry cart cleanup without creating another order
+  const handleCartCleanupRetry = () => {
     setErrorMessage("");
+
+    if (isCartBuyNow) {
+      handleRemovePurchasedItem();
+      return;
+    }
 
     clearCart.mutate(undefined, {
       onSuccess: () => {
@@ -174,13 +221,15 @@ function Checkout() {
       checkoutItems.length === 0 ||
       orderPlaced ||
       placeOrder.isPending ||
-      clearCart.isPending
+      clearCart.isPending ||
+      removeItem.isPending
     ) {
       return;
     }
 
     const orderDate = new Date().toISOString();
 
+    // Each product receives a separate order record
     const orders = checkoutItems.map((item, index) => ({
       id: `ORD-${Date.now()}-${index + 1}`,
       userId: user.id,
@@ -207,7 +256,9 @@ function Checkout() {
   if (!user?.id) {
     return (
       <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
-        <h1 className="text-3xl font-bold">Please Login</h1>
+        <h1 className="text-3xl font-bold">
+          Please Login
+        </h1>
 
         <Link
           to="/login"
@@ -228,7 +279,9 @@ function Checkout() {
   }
 
   if (productsError || (!isBuyNow && cartError)) {
-    const isRetrying = productsFetching || (!isBuyNow && cartFetching);
+    const isRetrying =
+      productsFetching ||
+      (!isBuyNow && cartFetching);
 
     return (
       <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
@@ -281,6 +334,7 @@ function Checkout() {
 
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-3 gap-10">
+
             {/* Shipping Information */}
             <div className="col-span-2 rounded-xl border border-white/10 bg-zinc-900 p-8">
               <h2 className="mb-6 text-2xl font-semibold">
@@ -289,12 +343,36 @@ function Checkout() {
 
               <div className="grid grid-cols-2 gap-5">
                 {[
-                  { name: "fullName", label: "Full Name", type: "text" },
-                  { name: "email", label: "Email", type: "email" },
-                  { name: "phone", label: "Phone", type: "tel" },
-                  { name: "city", label: "City", type: "text" },
-                  { name: "postalCode", label: "Postal Code", type: "text" },
-                  { name: "country", label: "Country", type: "text" },
+                  {
+                    name: "fullName",
+                    label: "Full Name",
+                    type: "text",
+                  },
+                  {
+                    name: "email",
+                    label: "Email",
+                    type: "email",
+                  },
+                  {
+                    name: "phone",
+                    label: "Phone",
+                    type: "tel",
+                  },
+                  {
+                    name: "city",
+                    label: "City",
+                    type: "text",
+                  },
+                  {
+                    name: "postalCode",
+                    label: "Postal Code",
+                    type: "text",
+                  },
+                  {
+                    name: "country",
+                    label: "Country",
+                    type: "text",
+                  },
                 ].map((field) => (
                   <div key={field.name}>
                     <label className="mb-2 block text-sm text-gray-400">
@@ -343,7 +421,9 @@ function Checkout() {
                     onChange={handleChange}
                   />
 
-                  <span>Cash on Delivery (Demo)</span>
+                  <span>
+                    Cash on Delivery (Demo)
+                  </span>
                 </label>
 
                 <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-white/10 bg-zinc-800 p-4">
@@ -355,7 +435,9 @@ function Checkout() {
                     onChange={handleChange}
                   />
 
-                  <span>Online Payment (Demo)</span>
+                  <span>
+                    Online Payment (Demo)
+                  </span>
                 </label>
               </div>
 
@@ -398,30 +480,41 @@ function Checkout() {
               </div>
 
               <Link
-                to={isBuyNow ? `/products/${buyNowProductId}` : "/cart"}
+                to={
+                  isBuyNow
+                    ? `/products/${buyNowProductId}`
+                    : "/cart"
+                }
                 className="mt-6 block text-center text-sm text-gray-400 hover:text-white"
               >
-                {isBuyNow ? "Back to Product" : "Back to Cart"}
+                {isBuyNow
+                  ? "Back to Product"
+                  : "Back to Cart"}
               </Link>
             </div>
           </div>
 
+          {/* Error Message */}
           {errorMessage && (
             <p className="mt-5 text-center text-red-400">
               {errorMessage}
             </p>
           )}
 
-          {orderPlaced && !isBuyNow ? (
+          {/* Order Button / Cart Cleanup Retry */}
+          {orderPlaced && (!isBuyNow || isCartBuyNow) ? (
             <button
               type="button"
-              onClick={handleClearCartRetry}
-              disabled={clearCart.isPending}
+              onClick={handleCartCleanupRetry}
+              disabled={
+                clearCart.isPending ||
+                removeItem.isPending
+              }
               className="mt-8 w-full rounded-lg bg-purple-600 px-8 py-4 font-semibold transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {clearCart.isPending
-                ? "Clearing Cart..."
-                : "Retry Clearing Cart"}
+              {clearCart.isPending || removeItem.isPending
+                ? "Updating Cart..."
+                : "Retry Cart Update"}
             </button>
           ) : (
             <button
@@ -429,6 +522,7 @@ function Checkout() {
               disabled={
                 placeOrder.isPending ||
                 clearCart.isPending ||
+                removeItem.isPending ||
                 orderPlaced
               }
               className="mt-8 w-full rounded-lg bg-purple-600 px-8 py-4 font-semibold transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
