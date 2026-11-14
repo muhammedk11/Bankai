@@ -34,7 +34,46 @@
         "/images/products/attack-on-titan-armored-titan-figure/side.png",
         "/images/products/attack-on-titan-armored-titan-figure/back.png"
       ]
-    },
+    },{
+  "id": "6",
+  "name": "Demon Slayer Poster",
+  "anime": "Demon Slayer",
+  "type": "posters",
+  "price": 14.99,
+  "stock": 25,
+  "description": "Bring the world of Demon Slayer to your walls with this premium anime poster, perfect for adding a touch of anime style to your collection.",
+  "image": "/images/products/demon-slayer-poster/front.png",
+  "images": [
+    "/images/products/demon-slayer-poster/front.png"
+  ]
+},{
+  "id": "7",
+  "name": "Attack on Titan Survey Corps Clothing",
+  "anime": "Attack on Titan",
+  "type": "clothing",
+  "price": 29.99,
+  "stock": 20,
+  "description": "Show your allegiance to the Survey Corps with this Attack on Titan-inspired clothing. A great addition to any fan's anime wardrobe.",
+  "image": "/images/products/attack-on-titan-survey-corps-cloth/front.png",
+  "images": [
+    "/images/products/attack-on-titan-survey-corps-cloth/front.png",
+    "/images/products/attack-on-titan-survey-corps-cloth/side.png",
+    "/images/products/attack-on-titan-survey-corps-cloth/back.png"
+  ]
+},{
+  "id": "8",
+  "name": "Attack on Titan Katana",
+  "anime": "Attack on Titan",
+  "type": "weapons",
+  "price": 49.99,
+  "stock": 15,
+  "description": "Add an impressive Attack on Titan-inspired katana to your collection. Featuring a striking design inspired by the anime, it's a perfect display piece for dedicated fans.",
+  "image": "/images/products/attack-on-titan-katana/front.png",
+  "images": [
+    "/images/products/attack-on-titan-katana/front.png",
+    "/images/products/attack-on-titan-katana/side.png"
+  ]
+},
     {
       "id": "2",
       "name": "Mikasa Ackerman Figure",
@@ -92,7 +131,75 @@
         "/images/products/levi-figure/side.png",
         "/images/products/levi-figure/back.png"
       ]
-    }
+    },{
+  "id": "9",
+  "name": "Bleach Anime Poster",
+  "anime": "Bleach",
+  "type": "posters",
+  "price": 14.99,
+  "stock": 25,
+  "description": "Bring the intense world of Bleach to your walls with this stylish anime poster. A great addition to any Bleach fan's collection.",
+  "image": "/images/products/bleach-poster/front.png",
+  "images": [
+    "/images/products/bleach-poster/front.png"
+  ]
+},{
+  "id": "10",
+  "name": "Bleach Katana",
+  "anime": "Bleach",
+  "type": "weapons",
+  "price": 59.99,
+  "stock": 15,
+  "description": "Bring the spirit of the Soul Reapers to your collection with this Bleach-inspired katana. Featuring an iconic anime-inspired design, it's an impressive display piece for fans.",
+  "image": "/images/products/bleach-katana/front.png",
+  "images": [
+    "/images/products/bleach-katana/front.png",
+    "/images/products/bleach-katana/side.png",
+    "/images/products/bleach-katana/back.png"
+  ]
+},{
+  "id": "11",
+  "name": "Bleach Captain Clothing",
+  "anime": "Bleach",
+  "type": "clothing",
+  "price": 34.99,
+  "stock": 20,
+  "description": "Show your love for the Soul Reapers with this Bleach-inspired Captain clothing. Featuring a design inspired by the iconic Gotei 13 captains, it's a great addition to any anime fan's wardrobe.",
+  "image": "/images/products/bleach-captain-cloth/front.png",
+  "images": [
+    "/images/products/bleach-captain-cloth/front.png",
+    "/images/products/bleach-captain-cloth/side.png",
+    "/images/products/bleach-captain-cloth/back.png"
+  ]
+},{
+  "id": "12",
+  "name": "Attack on Titan Katana 2",
+  "anime": "Attack on Titan",
+  "type": "weapons",
+  "price": 54.99,
+  "stock": 15,
+  "description": "Expand your Attack on Titan collection with this striking anime-inspired katana. Its detailed design makes it an excellent display piece for dedicated fans.",
+  "image": "/images/products/attack-on-titan-katana2/front.png",
+  "images": [
+    "/images/products/attack-on-titan-katana2/front.png",
+    "/images/products/attack-on-titan-katana2/side.png",
+    "/images/products/attack-on-titan-katana2/back.png"
+  ]
+},{
+  "id": "13",
+  "name": "Satoru Gojo Figure",
+  "anime": "Jujutsu Kaisen",
+  "type": "figures",
+  "price": 79.99,
+  "stock": 12,
+  "description": "Bring the power of the strongest sorcerer to your collection with this detailed Satoru Gojo collectible figure, inspired by his iconic appearance in Jujutsu Kaisen.",
+  "image": "/images/products/jujutsu-kaisen-gojo-figure/front.png",
+  "images": [
+    "/images/products/jujutsu-kaisen-gojo-figure/front.png",
+    "/images/products/jujutsu-kaisen-gojo-figure/side.png",
+    "/images/products/jujutsu-kaisen-gojo-figure/back.png"
+  ]
+}
   ],
   "carts": [
     {
