@@ -17,6 +17,12 @@
       "email": "demo@gamil.com",
       "password": "qwer4321",
       "id": "Avw31lvCbVQ"
+    },
+    {
+      "name": "54214653421",
+      "email": "muhammed0111@gmail.com",
+      "password": "qwer4321",
+      "id": "_sFFNXq7GEo"
     }
   ],
   "products": [
@@ -26,7 +32,7 @@
       "anime": "Attack on Titan",
       "type": "figures",
       "price": 89.99,
-      "stock": 12,
+      "stock": 5,
       "description": "Bring the terrifying power of the Armored Titan to your collection with this detailed collectible figure.",
       "image": "/images/products/attack-on-titan-armored-titan-figure/front.png",
       "images": [
@@ -34,46 +40,49 @@
         "/images/products/attack-on-titan-armored-titan-figure/side.png",
         "/images/products/attack-on-titan-armored-titan-figure/back.png"
       ]
-    },{
-  "id": "6",
-  "name": "Demon Slayer Poster",
-  "anime": "Demon Slayer",
-  "type": "posters",
-  "price": 14.99,
-  "stock": 25,
-  "description": "Bring the world of Demon Slayer to your walls with this premium anime poster, perfect for adding a touch of anime style to your collection.",
-  "image": "/images/products/demon-slayer-poster/front.png",
-  "images": [
-    "/images/products/demon-slayer-poster/front.png"
-  ]
-},{
-  "id": "7",
-  "name": "Attack on Titan Survey Corps Clothing",
-  "anime": "Attack on Titan",
-  "type": "clothing",
-  "price": 29.99,
-  "stock": 20,
-  "description": "Show your allegiance to the Survey Corps with this Attack on Titan-inspired clothing. A great addition to any fan's anime wardrobe.",
-  "image": "/images/products/attack-on-titan-survey-corps-cloth/front.png",
-  "images": [
-    "/images/products/attack-on-titan-survey-corps-cloth/front.png",
-    "/images/products/attack-on-titan-survey-corps-cloth/side.png",
-    "/images/products/attack-on-titan-survey-corps-cloth/back.png"
-  ]
-},{
-  "id": "8",
-  "name": "Attack on Titan Katana",
-  "anime": "Attack on Titan",
-  "type": "weapons",
-  "price": 49.99,
-  "stock": 15,
-  "description": "Add an impressive Attack on Titan-inspired katana to your collection. Featuring a striking design inspired by the anime, it's a perfect display piece for dedicated fans.",
-  "image": "/images/products/attack-on-titan-katana/front.png",
-  "images": [
-    "/images/products/attack-on-titan-katana/front.png",
-    "/images/products/attack-on-titan-katana/side.png"
-  ]
-},
+    },
+    {
+      "id": "6",
+      "name": "Demon Slayer Poster",
+      "anime": "Demon Slayer",
+      "type": "posters",
+      "price": 14.99,
+      "stock": 25,
+      "description": "Bring the world of Demon Slayer to your walls with this premium anime poster, perfect for adding a touch of anime style to your collection.",
+      "image": "/images/products/demon-slayer-poster/front.png",
+      "images": [
+        "/images/products/demon-slayer-poster/front.png"
+      ]
+    },
+    {
+      "id": "7",
+      "name": "Attack on Titan Survey Corps Clothing",
+      "anime": "Attack on Titan",
+      "type": "clothing",
+      "price": 29.99,
+      "stock": 20,
+      "description": "Show your allegiance to the Survey Corps with this Attack on Titan-inspired clothing. A great addition to any fan's anime wardrobe.",
+      "image": "/images/products/attack-on-titan-survey-corps-cloth/front.png",
+      "images": [
+        "/images/products/attack-on-titan-survey-corps-cloth/front.png",
+        "/images/products/attack-on-titan-survey-corps-cloth/side.png",
+        "/images/products/attack-on-titan-survey-corps-cloth/back.png"
+      ]
+    },
+    {
+      "id": "8",
+      "name": "Attack on Titan Katana",
+      "anime": "Attack on Titan",
+      "type": "weapons",
+      "price": 49.99,
+      "stock": 15,
+      "description": "Add an impressive Attack on Titan-inspired katana to your collection. Featuring a striking design inspired by the anime, it's a perfect display piece for dedicated fans.",
+      "image": "/images/products/attack-on-titan-katana/front.png",
+      "images": [
+        "/images/products/attack-on-titan-katana/front.png",
+        "/images/products/attack-on-titan-katana/side.png"
+      ]
+    },
     {
       "id": "2",
       "name": "Mikasa Ackerman Figure",
@@ -131,85 +140,298 @@
         "/images/products/levi-figure/side.png",
         "/images/products/levi-figure/back.png"
       ]
-    },{
-  "id": "9",
-  "name": "Bleach Anime Poster",
-  "anime": "Bleach",
-  "type": "posters",
-  "price": 14.99,
-  "stock": 25,
-  "description": "Bring the intense world of Bleach to your walls with this stylish anime poster. A great addition to any Bleach fan's collection.",
-  "image": "/images/products/bleach-poster/front.png",
-  "images": [
-    "/images/products/bleach-poster/front.png"
-  ]
-},{
-  "id": "10",
-  "name": "Bleach Katana",
-  "anime": "Bleach",
-  "type": "weapons",
-  "price": 59.99,
-  "stock": 15,
-  "description": "Bring the spirit of the Soul Reapers to your collection with this Bleach-inspired katana. Featuring an iconic anime-inspired design, it's an impressive display piece for fans.",
-  "image": "/images/products/bleach-katana/front.png",
-  "images": [
-    "/images/products/bleach-katana/front.png",
-    "/images/products/bleach-katana/side.png",
-    "/images/products/bleach-katana/back.png"
-  ]
-},{
-  "id": "11",
-  "name": "Bleach Captain Clothing",
-  "anime": "Bleach",
-  "type": "clothing",
-  "price": 34.99,
-  "stock": 20,
-  "description": "Show your love for the Soul Reapers with this Bleach-inspired Captain clothing. Featuring a design inspired by the iconic Gotei 13 captains, it's a great addition to any anime fan's wardrobe.",
-  "image": "/images/products/bleach-captain-cloth/front.png",
-  "images": [
-    "/images/products/bleach-captain-cloth/front.png",
-    "/images/products/bleach-captain-cloth/side.png",
-    "/images/products/bleach-captain-cloth/back.png"
-  ]
-},{
-  "id": "12",
-  "name": "Attack on Titan Katana 2",
-  "anime": "Attack on Titan",
-  "type": "weapons",
-  "price": 54.99,
-  "stock": 15,
-  "description": "Expand your Attack on Titan collection with this striking anime-inspired katana. Its detailed design makes it an excellent display piece for dedicated fans.",
-  "image": "/images/products/attack-on-titan-katana2/front.png",
-  "images": [
-    "/images/products/attack-on-titan-katana2/front.png",
-    "/images/products/attack-on-titan-katana2/side.png",
-    "/images/products/attack-on-titan-katana2/back.png"
-  ]
-},{
-  "id": "13",
-  "name": "Satoru Gojo Figure",
-  "anime": "Jujutsu Kaisen",
-  "type": "figures",
-  "price": 79.99,
-  "stock": 12,
-  "description": "Bring the power of the strongest sorcerer to your collection with this detailed Satoru Gojo collectible figure, inspired by his iconic appearance in Jujutsu Kaisen.",
-  "image": "/images/products/jujutsu-kaisen-gojo-figure/front.png",
-  "images": [
-    "/images/products/jujutsu-kaisen-gojo-figure/front.png",
-    "/images/products/jujutsu-kaisen-gojo-figure/side.png",
-    "/images/products/jujutsu-kaisen-gojo-figure/back.png"
-  ]
-}
+    },
+    {
+      "id": "9",
+      "name": "Bleach Anime Poster",
+      "anime": "Bleach",
+      "type": "posters",
+      "price": 14.99,
+      "stock": 25,
+      "description": "Bring the intense world of Bleach to your walls with this stylish anime poster. A great addition to any Bleach fan's collection.",
+      "image": "/images/products/bleach-poster/front.png",
+      "images": [
+        "/images/products/bleach-poster/front.png"
+      ]
+    },
+    {
+      "id": "10",
+      "name": "Bleach Katana",
+      "anime": "Bleach",
+      "type": "weapons",
+      "price": 59.99,
+      "stock": 15,
+      "description": "Bring the spirit of the Soul Reapers to your collection with this Bleach-inspired katana. Featuring an iconic anime-inspired design, it's an impressive display piece for fans.",
+      "image": "/images/products/bleach-katana/front.png",
+      "images": [
+        "/images/products/bleach-katana/front.png",
+        "/images/products/bleach-katana/side.png",
+        "/images/products/bleach-katana/back.png"
+      ]
+    },
+    {
+      "id": "11",
+      "name": "Bleach Captain Clothing",
+      "anime": "Bleach",
+      "type": "clothing",
+      "price": 34.99,
+      "stock": 20,
+      "description": "Show your love for the Soul Reapers with this Bleach-inspired Captain clothing. Featuring a design inspired by the iconic Gotei 13 captains, it's a great addition to any anime fan's wardrobe.",
+      "image": "/images/products/bleach-captain-cloth/front.png",
+      "images": [
+        "/images/products/bleach-captain-cloth/front.png",
+        "/images/products/bleach-captain-cloth/side.png",
+        "/images/products/bleach-captain-cloth/back.png"
+      ]
+    },
+    {
+      "id": "12",
+      "name": "Attack on Titan Eren Yegar Katana ",
+      "anime": "Attack on Titan",
+      "type": "weapons",
+      "price": 54.99,
+      "stock": 15,
+      "description": "Expand your Attack on Titan collection with this striking anime-inspired katana. Its detailed design makes it an excellent display piece for dedicated fans.",
+      "image": "/images/products/attack-on-titan-katana2/front.png",
+      "images": [
+        "/images/products/attack-on-titan-katana2/front.png",
+        "/images/products/attack-on-titan-katana2/side.png",
+        "/images/products/attack-on-titan-katana2/back.png"
+      ]
+    },
+    {
+      "id": "13",
+      "name": "Satoru Gojo Figure",
+      "anime": "Jujutsu Kaisen",
+      "type": "figures",
+      "price": 79.99,
+      "stock": 12,
+      "description": "Bring the power of the strongest sorcerer to your collection with this detailed Satoru Gojo collectible figure, inspired by his iconic appearance in Jujutsu Kaisen.",
+      "image": "/images/products/jujutsu-kaisen-gojo-figure/front.png",
+      "images": [
+        "/images/products/jujutsu-kaisen-gojo-figure/front.png",
+        "/images/products/jujutsu-kaisen-gojo-figure/side.png",
+        "/images/products/jujutsu-kaisen-gojo-figure/back.png"
+      ]
+    },
+    {
+      "id": "14",
+      "name": "Sosuke Aizen Figure",
+      "anime": "Bleach",
+      "type": "figures",
+      "price": 84.99,
+      "stock": 12,
+      "description": "Add the mastermind Sosuke Aizen to your collection with this detailed Bleach-inspired collectible figure, capturing the commanding presence of one of the series' most iconic antagonists.",
+      "image": "/images/products/bleach-aizen-figure/front.png",
+      "images": [
+        "/images/products/bleach-aizen-figure/front.png",
+        "/images/products/bleach-aizen-figure/side.png",
+        "/images/products/bleach-aizen-figure/back.png"
+      ]
+    },
+    {
+      "id": "15",
+      "name": "Byakuya Kuchiki Poster",
+      "anime": "Bleach",
+      "type": "posters",
+      "price": 16.99,
+      "stock": 25,
+      "description": "Decorate your space with this Byakuya Kuchiki anime poster, featuring the elegant and composed captain of Squad 6. A perfect addition to any Bleach fan's collection.",
+      "image": "/images/products/bleach-byakuya-kuchiki-poster/front.png",
+      "images": [
+        "/images/products/bleach-byakuya-kuchiki-poster/front.png"
+      ]
+    },
+    {
+      "id": "16",
+      "name": "Kyojuro Rengoku Katana",
+      "anime": "Demon Slayer",
+      "type": "weapons",
+      "price": 59.99,
+      "stock": 15,
+      "description": "Bring the Flame Hashira's spirit to your collection with this Demon Slayer-inspired Rengoku katana. Featuring a striking flame-themed design, it's an impressive display piece for any Demon Slayer fan.",
+      "image": "/images/products/demon-slayer-rengoku-katana/front.png",
+      "images": [
+        "/images/products/demon-slayer-rengoku-katana/front.png",
+        "/images/products/demon-slayer-rengoku-katana/side.png"
+      ]
+    },
+    {
+      "id": "17",
+      "name": "L Lawliet Figure",
+      "anime": "Death Note",
+      "type": "figures",
+      "price": 74.99,
+      "stock": 4,
+      "description": "Bring the brilliant detective L Lawliet to your collection with this detailed Death Note collectible figure. A must-have display piece for fans of the legendary psychological thriller.",
+      "image": "/images/products/death-note-l-figure/front.png",
+      "images": [
+        "/images/products/death-note-l-figure/front.png",
+        "/images/products/death-note-l-figure/side.png",
+        "/images/products/death-note-l-figure/back.png"
+      ]
+    },
+    {
+      "id": "18",
+      "name": "Denji Figure",
+      "anime": "Chainsaw Man",
+      "type": "figures",
+      "price": 79.99,
+      "stock": 12,
+      "description": "Bring the chaotic energy of Denji to your collection with this detailed Chainsaw Man collectible figure. A striking display piece for fans of the series.",
+      "image": "/images/products/chainsaw-man-denji-figure/front.png",
+      "images": [
+        "/images/products/chainsaw-man-denji-figure/front.png",
+        "/images/products/chainsaw-man-denji-figure/side.png",
+        "/images/products/chainsaw-man-denji-figure/back.png"
+      ]
+    },
+    {
+      "id": "19",
+      "name": "Kira vs. L Death Note Poster",
+      "anime": "Death Note",
+      "type": "posters",
+      "price": 16.99,
+      "stock": 25,
+      "description": "Capture the legendary battle of intelligence between Kira and L with this striking Death Note poster. Perfect for adding a dark psychological thriller aesthetic to your anime collection.",
+      "image": "/images/products/death-note-kira-l-poster/front.png",
+      "images": [
+        "/images/products/death-note-kira-l-poster/front.png"
+      ]
+    },
+    {
+      "id": "20",
+      "name": "Survey Corps Flare Gun",
+      "anime": "Attack on Titan",
+      "type": "weapons",
+      "price": 39.99,
+      "stock": 15,
+      "description": "Add a piece of Survey Corps equipment to your collection with this Attack on Titan-inspired flare gun replica. A distinctive display collectible for fans of humanity's fight against the Titans.",
+      "image": "/images/products/aot-flare-gun/side.png",
+      "images": [
+        "/images/products/aot-flare-gun/side.png",
+        "/images/products/aot-flare-gun/front.png",
+        "/images/products/aot-flare-gun/back.png"
+      ]
+    },
+    {
+      "id": "21",
+      "name": "Yoichi Isagi Figure",
+      "anime": "Blue Lock",
+      "type": "figures",
+      "price": 69.99,
+      "stock": 12,
+      "description": "Bring the ambition of Yoichi Isagi to your collection with this detailed Blue Lock collectible figure. A perfect display piece for fans of the striker determined to become the world's best.",
+      "image": "/images/products/blue-lock-isagi-figure/front.png",
+      "images": [
+        "/images/products/blue-lock-isagi-figure/front.png",
+        "/images/products/blue-lock-isagi-figure/back.png"
+      ]
+    },
+    {
+      "id": "22",
+      "name": "ODM Gear Gas Canister",
+      "anime": "Attack on Titan",
+      "type": "accessories",
+      "price": 24.99,
+      "stock": 20,
+      "description": "Complete your Survey Corps-inspired collection with this detailed ODM gear gas canister replica from Attack on Titan. A unique accessory collectible for fans of humanity's fight against the Titans.",
+      "image": "/images/products/aot-odm-gear-gas/front.png",
+      "images": [
+        "/images/products/aot-odm-gear-gas/front.png",
+        "/images/products/aot-odm-gear-gas/back.png"
+      ]
+    },
+    {
+      "id": "23",
+      "name": "Light Yagami (Kira) Figure",
+      "anime": "Death Note",
+      "type": "figures",
+      "price": 74.99,
+      "stock": 12,
+      "description": "Bring the calculating presence of Light Yagami to your collection with this detailed Death Note collectible figure. A must-have display piece for fans of Kira's dark pursuit of justice.",
+      "image": "/images/products/death-note-kira-figure/front.png",
+      "images": [
+        "/images/products/death-note-kira-figure/front.png",
+        "/images/products/death-note-kira-figure/back.png"
+      ]
+    },
+    {
+      "id": "24",
+      "name": "Death Note Shinigami Poster",
+      "anime": "Death Note",
+      "type": "posters",
+      "price": 14.99,
+      "stock": 25,
+      "description": "Bring the dark supernatural atmosphere of Death Note to your walls with this striking Shinigami-themed poster. A perfect addition for fans of the mysterious world of Ryuk and the Death Note.",
+      "image": "/images/products/death-note-shinigami-poster/front.png",
+      "images": [
+        "/images/products/death-note-shinigami-poster/front.png"
+      ]
+    },
+    {
+      "id": "25",
+      "name": "Akatsuki Cloud Hoodie",
+      "anime": "Naruto",
+      "type": "clothing",
+      "price": 39.99,
+      "stock": 20,
+      "description": "Represent the legendary Akatsuki with this stylish black hoodie featuring the iconic red cloud design. A perfect addition to any Naruto fan's streetwear collection.",
+      "image": "/images/products/naruto-akatski-cloth/front.png",
+      "images": [
+        "/images/products/naruto-akatski-cloth/back.png",
+        "/images/products/naruto-akatski-cloth/side.png",
+        "/images/products/naruto-akatski-cloth/front.png"
+      ]
+    },
+    {
+      "id": "26",
+      "name": "Akatsuki Cloud Ring",
+      "anime": "Naruto",
+      "type": "accessories",
+      "price": 14.99,
+      "stock": 20,
+      "description": "Show your allegiance to the Akatsuki with this stylish ring featuring the iconic red cloud symbol. A compact Naruto-inspired accessory for anime fans.",
+      "image": "/images/products/naruto-akatski-ring/front.png",
+      "images": [
+        "/images/products/naruto-akatski-ring/front.png",
+        "/images/products/naruto-akatski-ring/back.png",
+        "/images/products/naruto-akatski-ring/side.png"
+      ]
+    },
+    {
+      "id": "27",
+      "name": "Monkey D. Luffy Figure",
+      "anime": "One Piece",
+      "type": "figures",
+      "price": 79.99,
+      "stock": 12,
+      "description": "Bring the fearless spirit of Monkey D. Luffy to your collection with this detailed One Piece collectible figure. A must-have display piece for fans of the future Pirate King.",
+      "image": "/images/products/one-piece-luffy-figure/front.png",
+      "images": [
+        "/images/products/one-piece-luffy-figure/front.png"
+      ]
+    },
+    {
+      "id": "28",
+      "name": "Straw Hat Pirates Jolly Roger Necklace",
+      "anime": "One Piece",
+      "type": "accessories",
+      "price": 19.99,
+      "stock": 20,
+      "description": "Wear the symbol of the Straw Hat Pirates with this detailed Jolly Roger necklace inspired by One Piece. A stylish collectible accessory for fans of the legendary pirate crew.",
+      "image": "/images/products/one-piece-jolly-roger-necklace/front.png",
+      "images": [
+        "/images/products/one-piece-jolly-roger-necklace/front.png",
+        "/images/products/one-piece-jolly-roger-necklace/side.png",
+        "/images/products/one-piece-jolly-roger-necklace/back.png"
+      ]
+    }
   ],
   "carts": [
     {
       "userId": "lVPO-pOXZ0M",
-      "items": [
-        {
-          "productId": "2",
-          "quantity": 5
-        }
-      ],
+      "items": [],
       "id": "YA2c-jueIAQ"
     },
     {
@@ -227,7 +449,7 @@
     {
       "userId": "lVPO-pOXZ0M",
       "productIds": [
-        "2"
+        "10"
       ],
       "id": "3TfGxR3eIKo"
     },
@@ -239,108 +461,57 @@
   ],
   "orders": [
     {
-      "id": "_AgPSnhI7Io",
-      "userId": "lVPO-pOXZ0M",
+      "id": "SN8hUwh-f6w",
+      "userId": "Avw31lvCbVQ",
       "items": [
         {
-          "productId": "4",
-          "name": "Ryomen Sukuna Figure",
-          "image": "/images/products/jujutsu-kaisen-sukuna-figure/front.png",
-          "price": 74.99,
-          "quantity": 3
+          "productId": "1",
+          "name": "Armored Titan Figure",
+          "image": "/images/products/attack-on-titan-armored-titan-figure/front.png",
+          "price": 89.99,
+          "quantity": 4
         }
       ],
       "shippingDetails": {
-        "fullName": "muhammed",
-        "email": "muhammed011@gmail.com",
-        "phone": "0123654789",
-        "address": "werftgh fghjkl; ghjk",
-        "city": "new york",
-        "postalCode": "1234554",
-        "country": "america",
-        "paymentMethod": "cod"
-      },
-      "total": 224.96999999999997,
-      "status": "Placed",
-      "date": "2026-11-14T04:47:10.649Z"
-    },
-    {
-      "id": "yG3a1tgrYZY",
-      "userId": "lVPO-pOXZ0M",
-      "items": [
-        {
-          "productId": "4",
-          "name": "Ryomen Sukuna Figure",
-          "image": "/images/products/jujutsu-kaisen-sukuna-figure/front.png",
-          "price": 74.99,
-          "quantity": 3
-        }
-      ],
-      "shippingDetails": {
-        "fullName": "muhammed",
-        "email": "muhammed011@gmail.com",
-        "phone": "0123654789",
-        "address": "dfghjk,l cfvgbnm,. fg hjkl;",
+        "fullName": "demo",
+        "email": "demo@gamil.com",
+        "phone": "1236547890",
+        "address": "dfghjk, ghjkl; hjkl",
         "city": "new york",
         "postalCode": "1234554",
         "country": "america",
         "paymentMethod": "online"
       },
-      "total": 224.96999999999997,
+      "total": 359.96,
       "status": "Placed",
-      "date": "2026-11-14T05:29:55.120Z"
+      "date": "2026-11-14T09:30:46.928Z"
     },
     {
-      "id": "SXynCPMNrr8",
+      "id": "QY3urGAAoFE",
       "userId": "lVPO-pOXZ0M",
       "items": [
         {
-          "productId": "4",
-          "name": "Ryomen Sukuna Figure",
-          "image": "/images/products/jujutsu-kaisen-sukuna-figure/front.png",
-          "price": 74.99,
-          "quantity": 3
+          "productId": "1",
+          "name": "Armored Titan Figure",
+          "image": "/images/products/attack-on-titan-armored-titan-figure/front.png",
+          "price": 89.99,
+          "quantity": 4
         }
       ],
       "shippingDetails": {
         "fullName": "muhammed",
         "email": "muhammed011@gmail.com",
         "phone": "1236547890",
-        "address": "dfghjk dfghjk ghnjmk",
+        "address": "xcvbnm dfghjkl\n",
         "city": "new york",
         "postalCode": "1234554",
         "country": "america",
         "paymentMethod": "online"
       },
-      "total": 224.96999999999997,
-      "status": "Placed",
-      "date": "2026-11-14T05:37:37.074Z"
-    },
-    {
-      "id": "07O-E4_ooRA",
-      "userId": "lVPO-pOXZ0M",
-      "items": [
-        {
-          "productId": "2",
-          "name": "Mikasa Ackerman Figure",
-          "image": "/images/products/attack-on-titan-mikasa-figure/front.png",
-          "price": 64.99,
-          "quantity": 2
-        }
-      ],
-      "shippingDetails": {
-        "fullName": "muhammed",
-        "email": "muhammed011@gmail.com",
-        "phone": "1236547890",
-        "address": "xcvbn gjkjk ghkjl",
-        "city": "new york",
-        "postalCode": "1234554",
-        "country": "america",
-        "paymentMethod": "cod"
-      },
-      "total": 129.98,
-      "status": "Placed",
-      "date": "2026-11-14T05:38:19.852Z"
+      "total": 359.96,
+      "status": "Cancelled",
+      "date": "2026-11-14T09:48:31.879Z",
+      "stockRestored": true
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

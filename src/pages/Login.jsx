@@ -85,7 +85,7 @@ function Login() {
         </h1>
 
         <p className="text-center text-gray-400">
-          Login to your BANKAI account
+          Login to your BANKAI VAULT account
         </p>
 
         <input

@@ -34,7 +34,7 @@ function Account() {
         </h1>
 
         <p className="mb-8 text-gray-400">
-          Manage your BANKAI account.
+          Manage yourBANKAI VAULT account.
         </p>
 
         {/* Personal Information */}

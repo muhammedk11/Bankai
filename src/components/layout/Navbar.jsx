@@ -82,12 +82,14 @@ function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-8">
 
         {/* Logo */}
-        <Link
-          to="/"
-          className="shrink-0 text-2xl font-bold tracking-wider text-purple-500"
-        >
-          BANKAI
-        </Link>
+
+         <Link to="/" className="flex items-center">
+             <img
+               src="/images/logo/bankai-logo.png"
+               alt="BANKAI VAULT"
+               className="h-12 w-auto object-contain"
+                  />
+         </Link>
 
         {/* Search Bar */}
         <form

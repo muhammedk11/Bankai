@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   Link,
@@ -82,21 +81,15 @@ function Checkout() {
       String(product.id) === String(buyNowProductId)
   );
 
-  const buyNowItems =
-    selectedProduct && Number(selectedProduct.stock) > 0
-      ? [
-          {
-            ...selectedProduct,
-            quantity: Math.max(
-              1,
-              Math.min(
-                requestedQuantity,
-                Number(selectedProduct.stock)
-              )
-            ),
-          },
-        ]
-      : [];
+ const buyNowItems =
+  selectedProduct && Number(selectedProduct.stock) > 0
+    ? [
+        {
+          ...selectedProduct,
+          quantity: Math.max(1, requestedQuantity),
+        },
+      ]
+    : [];
 
   // Choose Buy Now item or normal cart items
   const checkoutItems = isBuyNow
@@ -127,55 +120,88 @@ function Checkout() {
 
   // Place orders
   const placeOrder = useMutation({
-    mutationFn: async (orders) => {
-      const responses = await Promise.all(
-        orders.map((order) =>
-          api.post("/orders", order)
-        )
-      );
+  mutationFn: async (orders) => {
+    // Get the latest product stock from the server
+    const latestProducts = await Promise.all(
+      orders.map(async (order) => {
+        const productId = order.items[0].productId;
 
-      return responses;
-    },
+        const response = await api.get(`/products/${productId}`);
 
-    onSuccess: () => {
-      setOrderPlaced(true);
+        return {
+          product: response.data,
+          quantity: order.items[0].quantity,
+        };
+      })
+    );
 
-      queryClient.invalidateQueries({
-        queryKey: ["orders", user?.id],
-      });
-
-      // Buy Now from an individual cart item
-      if (isCartBuyNow) {
-        handleRemovePurchasedItem();
-        return;
+    // Validate stock before updating anything
+    for (const item of latestProducts) {
+      if (Number(item.product.stock) < item.quantity) {
+        throw new Error(
+          `Insufficient stock for ${item.product.name}. Available stock: ${item.product.stock}.`
+        );
       }
+    }
 
-      // Buy Now from Product Details
-      if (isBuyNow) {
+    // Reduce product stock
+    await Promise.all(
+      latestProducts.map((item) =>
+        api.patch(`/products/${item.product.id}`, {
+          stock: Number(item.product.stock) - item.quantity,
+        })
+      )
+    );
+
+    // Create orders
+    const responses = await Promise.all(
+      orders.map((order) => api.post("/orders", order))
+    );
+
+    return responses;
+  },
+
+  onSuccess: () => {
+    setOrderPlaced(true);
+
+    queryClient.invalidateQueries({
+      queryKey: ["orders", user?.id],
+    });
+
+    // Refresh product stock throughout the application
+    queryClient.invalidateQueries({
+      queryKey: ["products"],
+    });
+
+    if (isCartBuyNow) {
+      handleRemovePurchasedItem();
+      return;
+    }
+
+    if (isBuyNow) {
+      navigate("/orders");
+      return;
+    }
+
+    clearCart.mutate(undefined, {
+      onSuccess: () => {
         navigate("/orders");
-        return;
-      }
+      },
+      onError: () => {
+        setErrorMessage(
+          "Your orders were placed successfully, but your cart could not be cleared. Try clearing it again."
+        );
+      },
+    });
+  },
 
-      // Normal checkout clears the entire cart
-      clearCart.mutate(undefined, {
-        onSuccess: () => {
-          navigate("/orders");
-        },
-        onError: () => {
-          setErrorMessage(
-            "Your orders were placed successfully, but your cart could not be cleared. Try clearing it again."
-          );
-        },
-      });
-    },
-
-    onError: () => {
-      setErrorMessage(
-        "Could not confirm all orders. Check your Orders page before trying again, as some orders may already have been created."
-      );
-    },
-  });
-
+  onError: (error) => {
+    setErrorMessage(
+      error.message ||
+        "Could not place your order. Please try again."
+    );
+  },
+});
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -215,6 +241,16 @@ function Checkout() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMessage("");
+    const insufficientStock = checkoutItems.find(
+  (item) => Number(item.stock) < item.quantity
+);
+
+if (insufficientStock) {
+  setErrorMessage(
+    `Insufficient stock for ${insufficientStock.name}. Available stock: ${insufficientStock.stock}.`
+  );
+  return;
+}
 
     if (
       !user?.id ||

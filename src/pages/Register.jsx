@@ -81,7 +81,7 @@ function Register() {
         className="w-full max-w-md space-y-5 rounded-xl bg-gray-900 p-8 text-white"
       >
         <h1 className="text-3xl font-bold text-purple-500 text-center">
-          Join BANKAI
+          Join BANKAI VAULT
         </h1>
 
         <p className="text-center text-gray-400">

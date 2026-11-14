@@ -33,26 +33,66 @@ function Orders() {
     retry: 2,
   });
 
-  // Delete an order
-  const deleteOrder = useMutation({
+  // Cancel order and restore product stock
+  const cancelOrder = useMutation({
     mutationFn: async (orderId) => {
-      await api.delete(`/orders/${orderId}`);
+      const orderResponse = await api.get(`/orders/${orderId}`);
+      const order = orderResponse.data;
+
+      // Prevent restoring stock more than once
+      if (order.stockRestored) {
+        return;
+      }
+
+      if (order.status === "Cancelled") {
+        // A previous cancellation may have failed during stock restoration.
+        // Continue the restoration without cancelling again.
+      } else {
+        await api.patch(`/orders/${orderId}`, {
+          status: "Cancelled",
+        });
+      }
+
+      const item = order.items?.[0];
+
+      if (!item) {
+        throw new Error("Order product details are missing.");
+      }
+
+      const productResponse = await api.get(
+        `/products/${item.productId}`
+      );
+
+      const product = productResponse.data;
+
+      await api.patch(`/products/${product.id}`, {
+        stock:
+          Number(product.stock) + Number(item.quantity),
+      });
+
+      await api.patch(`/orders/${orderId}`, {
+        stockRestored: true,
+      });
     },
 
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["orders", user?.id],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ["products"],
+      });
     },
   });
 
-  const handleDeleteOrder = (orderId) => {
+  const handleCancelOrder = (orderId) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this order?"
+      "Are you sure you want to cancel this order? The purchased quantity will be returned to stock."
     );
 
     if (confirmed) {
-      deleteOrder.mutate(orderId);
+      cancelOrder.mutate(orderId);
     }
   };
 
@@ -137,9 +177,10 @@ function Orders() {
           </p>
         </div>
 
-        {deleteOrder.isError && (
+        {cancelOrder.isError && (
           <p className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
-            Could not delete the order. Please try again.
+            {cancelOrder.error?.message ||
+              "Could not cancel the order or restore its stock. Please check the order before retrying."}
           </p>
         )}
 
@@ -176,7 +217,13 @@ function Orders() {
                     Status
                   </p>
 
-                  <span className="mt-1 inline-block rounded-full bg-green-500/10 px-3 py-1 text-sm text-green-400">
+                  <span
+                    className={`mt-1 inline-block rounded-full px-3 py-1 text-sm ${
+                      order.status === "Cancelled"
+                        ? "bg-red-500/10 text-red-400"
+                        : "bg-green-500/10 text-green-400"
+                    }`}
+                  >
                     {order.status}
                   </span>
                 </div>
@@ -191,16 +238,22 @@ function Orders() {
                   </p>
                 </div>
 
-                {/* Delete Order Button */}
-                <button
-                  onClick={() => handleDeleteOrder(order.id)}
-                  disabled={deleteOrder.isPending}
-                  className="rounded-lg bg-red-600/10 px-4 py-2 text-sm font-medium text-red-400 transition hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {deleteOrder.isPending
-                    ? "Deleting..."
-                    : "Delete Order"}
-                </button>
+                {/* Cancel Order Button */}
+                {order.status !== "Cancelled" ? (
+                  <button
+                    onClick={() => handleCancelOrder(order.id)}
+                    disabled={cancelOrder.isPending}
+                    className="rounded-lg bg-red-600/10 px-4 py-2 text-sm font-medium text-red-400 transition hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {cancelOrder.isPending
+                      ? "Processing..."
+                      : "Cancel Order"}
+                  </button>
+                ) : (
+                  <span className="text-sm text-red-400">
+                    Order Cancelled
+                  </span>
+                )}
               </div>
 
               {/* Ordered Products */}

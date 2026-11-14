@@ -30,6 +30,14 @@ const animeList = [
     name: "Jujutsu Kaisen",
     image: "/images/collections/jujutsu-kaisen.jpg",
   },
+  {
+  name: "Naruto",
+  image: "/images/collections/naruto.jpg",
+},
+{
+  name: "One Piece",
+  image: "/images/collections/one-piece.jpg",
+}
 ];
 
 function ShopByAnime() {

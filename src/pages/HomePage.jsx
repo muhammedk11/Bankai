@@ -28,7 +28,7 @@ function Home() {
           <div className="max-w-2xl">
 
             <p className="mb-4 font-semibold uppercase tracking-[0.3em] text-purple-400">
-              Welcome to BANKAI
+              Welcome to BANKAI VAULT
             </p>
 
             <h1 className="text-7xl font-black leading-tight">
