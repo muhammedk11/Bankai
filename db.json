@@ -97,7 +97,16 @@
   "carts": [
     {
       "userId": "lVPO-pOXZ0M",
-      "items": [],
+      "items": [
+        {
+          "productId": "1",
+          "quantity": 1
+        },
+        {
+          "productId": "2",
+          "quantity": 1
+        }
+      ],
       "id": "YA2c-jueIAQ"
     },
     {
@@ -127,30 +136,30 @@
   ],
   "orders": [
     {
-      "id": "QPWQljzukHo",
+      "id": "_AgPSnhI7Io",
       "userId": "lVPO-pOXZ0M",
       "items": [
         {
-          "productId": "1",
-          "name": "Armored Titan Figure",
-          "image": "/images/products/attack-on-titan-armored-titan-figure/front.png",
-          "price": 89.99,
-          "quantity": 1
+          "productId": "4",
+          "name": "Ryomen Sukuna Figure",
+          "image": "/images/products/jujutsu-kaisen-sukuna-figure/front.png",
+          "price": 74.99,
+          "quantity": 3
         }
       ],
       "shippingDetails": {
         "fullName": "muhammed",
         "email": "muhammed011@gmail.com",
         "phone": "0123654789",
-        "address": "sdfghjk",
+        "address": "werftgh fghjkl; ghjk",
         "city": "new york",
         "postalCode": "1234554",
         "country": "america",
         "paymentMethod": "cod"
       },
-      "total": 89.99,
+      "total": 224.96999999999997,
       "status": "Placed",
-      "date": "2026-11-13T13:58:10.094Z"
+      "date": "2026-11-14T04:47:10.649Z"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

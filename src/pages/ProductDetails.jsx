@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 
@@ -10,9 +10,9 @@ import { useWishlist } from "../hooks/useWishlist";
 
 function ProductDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
 
-  // Fetch product
   const {
     data: product,
     isLoading,
@@ -28,10 +28,8 @@ function ProductDetails() {
     retry: 2,
   });
 
-  // Backend cart
   const { addItem } = useCart(user?.id);
 
-  // Backend wishlist
   const {
     wishlist,
     addItem: addToWishlist,
@@ -50,7 +48,6 @@ function ProductDetails() {
     );
   }
 
-  // API Error
   if (isError) {
     return (
       <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
@@ -82,7 +79,6 @@ function ProductDetails() {
     );
   }
 
-  // Product Not Found
   if (!product || product.id == null) {
     return (
       <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
@@ -130,6 +126,14 @@ function ProductDetails() {
       {
         onSuccess: () => setAdded(true),
       }
+    );
+  };
+
+  const handleBuyNow = () => {
+    if (!user?.id || Number(product.stock) < 1) return;
+
+    navigate(
+      `/checkout?buyNow=${product.id}&quantity=${quantity}`
     );
   };
 
@@ -195,7 +199,7 @@ function ProductDetails() {
               : "Out of Stock"}
           </p>
 
-          {/* Quantity and Add to Cart */}
+          {/* Quantity and Purchase Buttons */}
           {product.stock > 0 && (
             <>
               <div className="mt-8">
@@ -245,6 +249,14 @@ function ProductDetails() {
                   : addItem.isPending
                     ? "Adding..."
                     : "Add to Cart"}
+              </button>
+
+              <button
+                onClick={handleBuyNow}
+                disabled={!user?.id}
+                className="mt-3 w-full rounded-lg border border-purple-500 px-6 py-4 font-semibold text-purple-400 transition hover:bg-purple-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {!user?.id ? "Login to Buy" : "Buy Now"}
               </button>
 
               {added && (

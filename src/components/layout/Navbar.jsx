@@ -1,7 +1,7 @@
-
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
+import { useCart } from "../../hooks/useCart";
 
 function Navbar() {
   const dispatch = useDispatch();
@@ -11,11 +11,15 @@ function Navbar() {
     (state) => state.auth
   );
 
+  const { cart } = useCart(user?.id);
+
+  // Calculate total quantity of all cart items
+const cartCount = (cart?.items || []).length;
+
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Products", path: "/products" },
     { name: "Wishlist", path: "/wishlist" },
-    { name: "Cart", path: "/cart" },
   ];
 
   const productTypes = [
@@ -62,6 +66,24 @@ function Navbar() {
               {link.name}
             </NavLink>
           ))}
+
+          {/* Cart with quantity */}
+          <NavLink
+            to="/cart"
+            className={({ isActive }) =>
+              `relative transition hover:text-purple-400 ${
+                isActive ? "text-purple-400" : "text-gray-300"
+              }`
+            }
+          >
+            Cart
+
+            {cartCount > 0 && (
+              <span className="absolute -right-4 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-purple-600 px-1 text-xs font-bold text-white">
+                {cartCount > 99 ? "99+" : cartCount}
+              </span>
+            )}
+          </NavLink>
 
           {/* Shop by Anime */}
           <NavLink

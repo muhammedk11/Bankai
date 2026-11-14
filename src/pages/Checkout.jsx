@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -11,8 +11,13 @@ import { useProducts } from "../hooks/useProducts";
 function Checkout() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
 
   const user = useSelector((state) => state.auth.user);
+
+  const buyNowProductId = searchParams.get("buyNow");
+  const requestedQuantity = Number(searchParams.get("quantity")) || 1;
+  const isBuyNow = Boolean(buyNowProductId);
 
   const {
     cart,
@@ -60,7 +65,30 @@ function Checkout() {
     })
     .filter(Boolean);
 
-  const subtotal = cartItems.reduce(
+  // Select either one Buy Now product or the normal cart items
+  const selectedProduct = products.find(
+    (product) => String(product.id) === String(buyNowProductId)
+  );
+
+  const buyNowItems =
+    selectedProduct && Number(selectedProduct.stock) > 0
+      ? [
+          {
+            ...selectedProduct,
+            quantity: Math.max(
+              1,
+              Math.min(
+                requestedQuantity,
+                Number(selectedProduct.stock)
+              )
+            ),
+          },
+        ]
+      : [];
+
+  const checkoutItems = isBuyNow ? buyNowItems : cartItems;
+
+  const subtotal = checkoutItems.reduce(
     (total, item) => total + Number(item.price) * item.quantity,
     0
   );
@@ -81,6 +109,13 @@ function Checkout() {
         queryKey: ["orders", user?.id],
       });
 
+      // Buy Now must not modify the existing cart
+      if (isBuyNow) {
+        navigate("/orders");
+        return;
+      }
+
+      // Normal cart checkout clears the cart
       clearCart.mutate(undefined, {
         onSuccess: () => {
           navigate("/orders");
@@ -108,7 +143,10 @@ function Checkout() {
   };
 
   const handleRetry = () => {
-    refetchCart();
+    if (!isBuyNow) {
+      refetchCart();
+    }
+
     refetchProducts();
   };
 
@@ -133,7 +171,7 @@ function Checkout() {
 
     if (
       !user?.id ||
-      cartItems.length === 0 ||
+      checkoutItems.length === 0 ||
       orderPlaced ||
       placeOrder.isPending ||
       clearCart.isPending
@@ -143,7 +181,7 @@ function Checkout() {
 
     const orderDate = new Date().toISOString();
 
-    const orders = cartItems.map((item, index) => ({
+    const orders = checkoutItems.map((item, index) => ({
       id: `ORD-${Date.now()}-${index + 1}`,
       userId: user.id,
 
@@ -181,7 +219,7 @@ function Checkout() {
     );
   }
 
-  if (cartLoading || productsLoading) {
+  if (productsLoading || (!isBuyNow && cartLoading)) {
     return (
       <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
         Loading checkout...
@@ -189,8 +227,8 @@ function Checkout() {
     );
   }
 
-  if (cartError || productsError) {
-    const isRetrying = cartFetching || productsFetching;
+  if (productsError || (!isBuyNow && cartError)) {
+    const isRetrying = productsFetching || (!isBuyNow && cartFetching);
 
     return (
       <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
@@ -209,12 +247,20 @@ function Checkout() {
     );
   }
 
-  if (cartItems.length === 0) {
+  if (checkoutItems.length === 0) {
     return (
       <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
         <h1 className="text-3xl font-bold">
-          Your cart is empty
+          {isBuyNow
+            ? "Product Unavailable"
+            : "Your cart is empty"}
         </h1>
+
+        <p className="mt-3 text-gray-400">
+          {isBuyNow
+            ? "This product is unavailable or out of stock."
+            : "Add some products before proceeding to checkout."}
+        </p>
 
         <Link
           to="/products"
@@ -325,7 +371,7 @@ function Checkout() {
               </h2>
 
               <div className="mt-6 space-y-4">
-                {cartItems.map((item) => (
+                {checkoutItems.map((item) => (
                   <div
                     key={item.id}
                     className="flex justify-between gap-4 text-sm"
@@ -352,10 +398,10 @@ function Checkout() {
               </div>
 
               <Link
-                to="/cart"
+                to={isBuyNow ? `/products/${buyNowProductId}` : "/cart"}
                 className="mt-6 block text-center text-sm text-gray-400 hover:text-white"
               >
-                Back to Cart
+                {isBuyNow ? "Back to Product" : "Back to Cart"}
               </Link>
             </div>
           </div>
@@ -366,7 +412,7 @@ function Checkout() {
             </p>
           )}
 
-          {orderPlaced ? (
+          {orderPlaced && !isBuyNow ? (
             <button
               type="button"
               onClick={handleClearCartRetry}
@@ -382,7 +428,8 @@ function Checkout() {
               type="submit"
               disabled={
                 placeOrder.isPending ||
-                clearCart.isPending
+                clearCart.isPending ||
+                orderPlaced
               }
               className="mt-8 w-full rounded-lg bg-purple-600 px-8 py-4 font-semibold transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
