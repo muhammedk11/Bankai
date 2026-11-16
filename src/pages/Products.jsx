@@ -16,6 +16,7 @@ function Products() {
   const selectedAnime = searchParams.get("anime") || "";
   const selectedType = searchParams.get("type") || "";
   const selectedSearch = searchParams.get("search") || "";
+  const selectedSort = searchParams.get("sort") || "";
 
   if (isLoading) {
     return <p className="p-8 text-center">Loading products...</p>;
@@ -37,6 +38,7 @@ function Products() {
     );
   }
 
+  // Filter products
   const filteredProducts = products.filter((product) => {
     const animeMatch =
       !selectedAnime || product.anime === selectedAnime;
@@ -60,6 +62,22 @@ function Products() {
     return animeMatch && typeMatch && searchMatch;
   });
 
+  // Sort products by price
+  const sortedProducts = [...filteredProducts];
+
+  if (selectedSort === "low-to-high") {
+    sortedProducts.sort(
+      (a, b) => Number(a.price) - Number(b.price)
+    );
+  }
+
+  if (selectedSort === "high-to-low") {
+    sortedProducts.sort(
+      (a, b) => Number(b.price) - Number(a.price)
+    );
+  }
+
+  // Update URL filters
   const handleFilterChange = (filter, value) => {
     const params = new URLSearchParams(searchParams);
 
@@ -94,6 +112,7 @@ function Products() {
         {/* Filters */}
         <div className="mb-10 flex items-center gap-5">
 
+          {/* Anime Filter */}
           <select
             value={selectedAnime}
             onChange={(e) =>
@@ -113,6 +132,7 @@ function Products() {
             <option value="One Piece">One Piece</option>
           </select>
 
+          {/* Type Filter */}
           <select
             value={selectedType}
             onChange={(e) =>
@@ -128,6 +148,20 @@ function Products() {
             <option value="posters">Posters & Wall Art</option>
           </select>
 
+          {/* Price Sorting */}
+          <select
+            value={selectedSort}
+            onChange={(e) =>
+              handleFilterChange("sort", e.target.value)
+            }
+            className="rounded-lg border border-white/10 bg-zinc-900 px-4 py-3 text-white outline-none focus:border-purple-500"
+          >
+            <option value="">Default Sorting</option>
+            <option value="low-to-high">Price: Low to High</option>
+            <option value="high-to-low">Price: High to Low</option>
+          </select>
+
+          {/* Clear Filters */}
           <button
             onClick={() => setSearchParams({})}
             className="rounded-lg border border-purple-500 px-5 py-3 text-purple-400 transition hover:bg-purple-600 hover:text-white"
@@ -149,14 +183,14 @@ function Products() {
 
         {/* Product Count */}
         <p className="mb-6 text-sm text-gray-400">
-          Showing {filteredProducts.length} products
+          Showing {sortedProducts.length} products
         </p>
 
         {/* Product Grid */}
-        {filteredProducts.length > 0 ? (
+        {sortedProducts.length > 0 ? (
           <div className="grid grid-cols-4 gap-6">
 
-            {filteredProducts.map((product) => (
+            {sortedProducts.map((product) => (
               <Link
                 key={product.id}
                 to={`/products/${product.id}`}

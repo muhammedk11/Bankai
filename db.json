@@ -431,7 +431,28 @@
   "carts": [
     {
       "userId": "lVPO-pOXZ0M",
-      "items": [],
+      "items": [
+        {
+          "productId": "26",
+          "quantity": 5
+        },
+        {
+          "productId": "1",
+          "quantity": 2
+        },
+        {
+          "productId": "10",
+          "quantity": 1
+        },
+        {
+          "productId": "7",
+          "quantity": 1
+        },
+        {
+          "productId": "18",
+          "quantity": 1
+        }
+      ],
       "id": "YA2c-jueIAQ"
     },
     {
@@ -448,9 +469,7 @@
   "wishlists": [
     {
       "userId": "lVPO-pOXZ0M",
-      "productIds": [
-        "10"
-      ],
+      "productIds": [],
       "id": "3TfGxR3eIKo"
     },
     {
@@ -511,6 +530,33 @@
       "total": 359.96,
       "status": "Cancelled",
       "date": "2026-11-14T09:48:31.879Z",
+      "stockRestored": true
+    },
+    {
+      "id": "RovTetqHijg",
+      "userId": "lVPO-pOXZ0M",
+      "items": [
+        {
+          "productId": "26",
+          "name": "Akatsuki Cloud Ring",
+          "image": "/images/products/naruto-akatski-ring/front.png",
+          "price": 14.99,
+          "quantity": 4
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "muhammed",
+        "email": "muhammed011@gmail.com",
+        "phone": "1236547890",
+        "address": "sdfg fghjm fghjk",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "cod"
+      },
+      "total": 59.96,
+      "status": "Cancelled",
+      "date": "2026-11-14T13:54:45.807Z",
       "stockRestored": true
     }
   ],
