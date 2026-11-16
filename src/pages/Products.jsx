@@ -77,6 +77,25 @@ function Products() {
     );
   }
 
+  // Pagination
+  const itemsPerPage = 8;
+
+  const totalPages = Math.ceil(
+    sortedProducts.length / itemsPerPage
+  );
+
+  const currentPage = Math.min(
+    Math.max(Number(searchParams.get("page")) || 1, 1),
+    Math.max(totalPages, 1)
+  );
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+
+  const paginatedProducts = sortedProducts.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
   // Update URL filters
   const handleFilterChange = (filter, value) => {
     const params = new URLSearchParams(searchParams);
@@ -87,6 +106,16 @@ function Products() {
       params.delete(filter);
     }
 
+    // Reset to first page when filters change
+    params.delete("page");
+
+    setSearchParams(params);
+  };
+
+  // Change page
+  const handlePageChange = (page) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", String(page));
     setSearchParams(params);
   };
 
@@ -183,14 +212,16 @@ function Products() {
 
         {/* Product Count */}
         <p className="mb-6 text-sm text-gray-400">
-          Showing {sortedProducts.length} products
+          Showing {sortedProducts.length > 0 ? startIndex + 1 : 0}-
+          {Math.min(startIndex + itemsPerPage, sortedProducts.length)} of{" "}
+          {sortedProducts.length} products
         </p>
 
         {/* Product Grid */}
-        {sortedProducts.length > 0 ? (
+        {paginatedProducts.length > 0 ? (
           <div className="grid grid-cols-4 gap-6">
 
-            {sortedProducts.map((product) => (
+            {paginatedProducts.map((product) => (
               <Link
                 key={product.id}
                 to={`/products/${product.id}`}
@@ -213,6 +244,10 @@ function Products() {
                     {product.name}
                   </h2>
 
+                  <p className="mt-3 text-lg font-bold text-white">
+                    ${Number(product.price).toFixed(2)}
+                  </p>
+
                   <p className="mt-3 text-sm text-gray-400">
                     View Product →
                   </p>
@@ -230,6 +265,43 @@ function Products() {
             <p className="mt-3 text-gray-400">
               Try changing or clearing your filters.
             </p>
+          </div>
+        )}
+
+        {/* Pagination Buttons */}
+        {totalPages > 1 && (
+          <div className="mt-12 flex items-center justify-center gap-3">
+
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="rounded-lg border border-white/10 px-4 py-2 text-sm transition hover:border-purple-500 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Previous
+            </button>
+
+            {Array.from({ length: totalPages }, (_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => handlePageChange(index + 1)}
+                className={`rounded-lg px-4 py-2 text-sm transition ${
+                  currentPage === index + 1
+                    ? "bg-purple-600 text-white"
+                    : "border border-white/10 text-gray-400 hover:border-purple-500 hover:text-white"
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="rounded-lg border border-white/10 px-4 py-2 text-sm transition hover:border-purple-500 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              Next
+            </button>
+
           </div>
         )}
 
