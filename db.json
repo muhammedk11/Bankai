@@ -451,6 +451,10 @@
         {
           "productId": "18",
           "quantity": 1
+        },
+        {
+          "productId": "6",
+          "quantity": 17
         }
       ],
       "id": "YA2c-jueIAQ"
@@ -469,7 +473,9 @@
   "wishlists": [
     {
       "userId": "lVPO-pOXZ0M",
-      "productIds": [],
+      "productIds": [
+        "6"
+      ],
       "id": "3TfGxR3eIKo"
     },
     {

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
@@ -11,6 +11,7 @@ function Navbar() {
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const { user, isAuthenticated } = useSelector(
     (state) => state.auth
@@ -22,10 +23,23 @@ function Navbar() {
   // Number of unique products in the cart
   const cartCount = (cart?.items || []).length;
 
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Check whether the debounce is still waiting
+  const isSearchPending =
+    searchTerm.trim() !== debouncedSearch.trim();
+
   // Filter products for live search suggestions
   const searchResults = products
     .filter((product) => {
-      const search = searchTerm.trim().toLowerCase();
+      const search = debouncedSearch.trim().toLowerCase();
 
       if (!search) return false;
 
@@ -70,6 +84,7 @@ function Navbar() {
 
     navigate(`/products?search=${encodeURIComponent(search)}`);
     setSearchTerm("");
+    setDebouncedSearch("");
   };
 
   const handleLogout = () => {
@@ -82,14 +97,13 @@ function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-8">
 
         {/* Logo */}
-
-         <Link to="/" className="flex items-center">
-             <img
-               src="/images/logo/bankai-logo.png"
-               alt="BANKAI VAULT"
-               className="h-12 w-auto object-contain"
-                  />
-         </Link>
+        <Link to="/" className="flex items-center">
+          <img
+            src="/images/logo/bankai-logo.png"
+            alt="BANKAI VAULT"
+            className="h-12 w-auto object-contain"
+          />
+        </Link>
 
         {/* Search Bar */}
         <form
@@ -125,12 +139,20 @@ function Navbar() {
           {/* Live Suggestions */}
           {searchTerm.trim() && (
             <div className="absolute left-0 top-full z-50 mt-2 w-full overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
-              {searchResults.length > 0 ? (
+
+              {isSearchPending ? (
+                <p className="p-4 text-center text-sm text-gray-400">
+                  Searching...
+                </p>
+              ) : searchResults.length > 0 ? (
                 searchResults.map((product) => (
                   <Link
                     key={product.id}
                     to={`/products/${product.id}`}
-                    onClick={() => setSearchTerm("")}
+                    onClick={() => {
+                      setSearchTerm("");
+                      setDebouncedSearch("");
+                    }}
                     className="flex items-center gap-3 border-b border-white/5 p-3 transition last:border-0 hover:bg-purple-600/10"
                   >
                     <img
@@ -264,6 +286,7 @@ function Navbar() {
                     <p className="font-semibold text-white">
                       {user?.name}
                     </p>
+
                     <p className="truncate text-xs text-gray-400">
                       {user?.email}
                     </p>
@@ -300,7 +323,6 @@ function Navbar() {
                   </Link>
                 </>
               )}
-
             </div>
           </div>
 
