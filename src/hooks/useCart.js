@@ -5,6 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 
+import toast from "react-hot-toast";
 import api from "../services/api";
 
 export const useCart = (userId) => {
@@ -55,12 +56,14 @@ export const useCart = (userId) => {
       let updatedItems;
 
       if (existingItem) {
+        const newQuantity = existingItem.quantity + quantity;
+
         updatedItems = items.map((item) =>
           String(item.productId) === productId
             ? {
                 ...item,
                 quantity: Math.min(
-                  item.quantity + quantity,
+                  newQuantity,
                   Number(product.stock)
                 ),
               }
@@ -80,17 +83,35 @@ export const useCart = (userId) => {
       }
 
       if (cart) {
-        return api.patch(`/carts/${cart.id}`, {
+        await api.patch(`/carts/${cart.id}`, {
+          items: updatedItems,
+        });
+      } else {
+        await api.post("/carts", {
+          userId,
           items: updatedItems,
         });
       }
 
-      return api.post("/carts", {
-        userId,
-        items: updatedItems,
-      });
+      return {
+        productName: product.name,
+        alreadyExists: Boolean(existingItem),
+      };
     },
-    onSuccess: refreshCart,
+
+    onSuccess: (result) => {
+      refreshCart();
+
+      toast.success(
+        result.alreadyExists
+          ? `${result.productName} quantity updated in cart`
+          : `${result.productName} added to cart!`
+      );
+    },
+
+    onError: () => {
+      toast.error("Failed to add product to cart");
+    },
   });
 
   // Update a product's quantity
@@ -116,7 +137,15 @@ export const useCart = (userId) => {
         items: updatedItems,
       });
     },
-    onSuccess: refreshCart,
+
+    onSuccess: () => {
+      refreshCart();
+      toast.success("Cart quantity updated!");
+    },
+
+    onError: () => {
+      toast.error("Failed to update cart quantity");
+    },
   });
 
   // Remove a product
@@ -134,7 +163,15 @@ export const useCart = (userId) => {
         items: updatedItems,
       });
     },
-    onSuccess: refreshCart,
+
+    onSuccess: () => {
+      refreshCart();
+      toast.success("Product removed from cart!");
+    },
+
+    onError: () => {
+      toast.error("Failed to remove product from cart");
+    },
   });
 
   // Clear the cart
@@ -148,7 +185,15 @@ export const useCart = (userId) => {
         items: [],
       });
     },
-    onSuccess: refreshCart,
+
+    onSuccess: () => {
+      refreshCart();
+      toast.success("Cart cleared!");
+    },
+
+    onError: () => {
+      toast.error("Failed to clear cart");
+    },
   });
 
   return {

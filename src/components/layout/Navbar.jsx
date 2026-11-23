@@ -27,7 +27,7 @@ function Navbar() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm);
-    }, 300);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, [searchTerm]);

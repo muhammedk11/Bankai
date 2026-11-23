@@ -3,6 +3,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 import api from "../services/api";
 
@@ -40,52 +41,74 @@ export const useWishlist = (userId) => {
   };
 
   // Add a product
-  const addItem = useMutation({
-    mutationFn: async (productId) => {
-      const wishlist = await getWishlistRecord();
+ // Add a product
+const addItem = useMutation({
+  mutationFn: async (productId) => {
+    const wishlist = await getWishlistRecord();
 
-      const productIds = wishlist?.productIds || [];
-      const id = String(productId);
+    const productIds = wishlist?.productIds || [];
+    const id = String(productId);
 
-      // Prevent duplicate products
-      if (productIds.some((item) => String(item) === id)) {
-        return wishlist;
-      }
+    // Prevent duplicate products
+    if (productIds.some((item) => String(item) === id)) {
+      return { alreadyExists: true };
+    }
 
-      const updatedProductIds = [...productIds, id];
+    const updatedProductIds = [...productIds, id];
 
-      if (wishlist) {
-        return api.patch(`/wishlists/${wishlist.id}`, {
-          productIds: updatedProductIds,
-        });
-      }
-
-      return api.post("/wishlists", {
+    if (wishlist) {
+      await api.patch(`/wishlists/${wishlist.id}`, {
+        productIds: updatedProductIds,
+      });
+    } else {
+      await api.post("/wishlists", {
         userId,
         productIds: updatedProductIds,
       });
-    },
-    onSuccess: refreshWishlist,
-  });
+    }
 
+    return { alreadyExists: false };
+  },
+
+  onSuccess: (result) => {
+    refreshWishlist();
+
+    if (result.alreadyExists) {
+      toast("Product is already in your wishlist");
+    } else {
+      toast.success("Added to wishlist!");
+    }
+  },
+
+  onError: () => {
+    toast.error("Failed to add product to wishlist");
+  },
+});
   // Remove a product
-  const removeItem = useMutation({
-    mutationFn: async (productId) => {
-      const wishlist = await getWishlistRecord();
+const removeItem = useMutation({
+  mutationFn: async (productId) => {
+    const wishlist = await getWishlistRecord();
 
-      if (!wishlist) return;
+    if (!wishlist) return;
 
-      const updatedProductIds = wishlist.productIds.filter(
-        (id) => String(id) !== String(productId)
-      );
+    const updatedProductIds = wishlist.productIds.filter(
+      (id) => String(id) !== String(productId)
+    );
 
-      return api.patch(`/wishlists/${wishlist.id}`, {
-        productIds: updatedProductIds,
-      });
-    },
-    onSuccess: refreshWishlist,
-  });
+    return api.patch(`/wishlists/${wishlist.id}`, {
+      productIds: updatedProductIds,
+    });
+  },
 
+  onSuccess: () => {
+    refreshWishlist();
+    toast.success("Removed from wishlist!");
+  },
+
+  onError: () => {
+    toast.error("Failed to remove product from wishlist");
+  },
+});
   // Clear the wishlist
   const clearWishlist = useMutation({
     mutationFn: async () => {

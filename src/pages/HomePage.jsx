@@ -1,11 +1,8 @@
-
 import { Link } from "react-router-dom";
 import heroVideo from "../assets/videos/hero video 1.mp4";
 import { useProducts } from "../hooks/useProducts";
-
 function Home() {
   const { data: products = [], isLoading, isError } = useProducts();
-
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
 

@@ -1,4 +1,12 @@
 {
+  "admin":[
+    {
+      "id": "bankai-admin-001",
+      "name": "BANKAI Admin",
+      "email": "admin@gmail.com",
+      "password": "admin@4321"
+    }
+  ],
   "users": [
     {
       "id": "lVPO-pOXZ0M",
@@ -23,8 +31,34 @@
       "email": "muhammed0111@gmail.com",
       "password": "qwer4321",
       "id": "_sFFNXq7GEo"
+    },
+    {
+      "name": "ronaldo",
+      "email": "muhammed@gmial.com",
+      "password": "12345qwer",
+      "id": "KuqJRxPo6ns"
+    },
+    {
+      "name": "muhammed k",
+      "email": "a@b",
+      "password": "12345678",
+      "id": "6UrD066WinQ"
+    },
+    {
+      "name": "aizen",
+      "email": "test@gaiml.com",
+      "password": "Bankai@123",
+      "id": "YT5V7VCcASc"
+    },
+    {
+      "name": "haiii",
+      "email": "hi@b.com",
+      "password": "Aa123654@",
+      "id": "bm3q-Hn2Y_I"
     }
   ],
+  
+
   "products": [
     {
       "id": "1",
@@ -47,7 +81,7 @@
       "anime": "Demon Slayer",
       "type": "posters",
       "price": 14.99,
-      "stock": 25,
+      "stock": 8,
       "description": "Bring the world of Demon Slayer to your walls with this premium anime poster, perfect for adding a touch of anime style to your collection.",
       "image": "/images/products/demon-slayer-poster/front.png",
       "images": [
@@ -60,7 +94,7 @@
       "anime": "Attack on Titan",
       "type": "clothing",
       "price": 29.99,
-      "stock": 20,
+      "stock": 18,
       "description": "Show your allegiance to the Survey Corps with this Attack on Titan-inspired clothing. A great addition to any fan's anime wardrobe.",
       "image": "/images/products/attack-on-titan-survey-corps-cloth/front.png",
       "images": [
@@ -75,7 +109,7 @@
       "anime": "Attack on Titan",
       "type": "weapons",
       "price": 49.99,
-      "stock": 15,
+      "stock": 14,
       "description": "Add an impressive Attack on Titan-inspired katana to your collection. Featuring a striking design inspired by the anime, it's a perfect display piece for dedicated fans.",
       "image": "/images/products/attack-on-titan-katana/front.png",
       "images": [
@@ -117,7 +151,7 @@
       "anime": "Jujutsu Kaisen",
       "type": "figures",
       "price": 74.99,
-      "stock": 10,
+      "stock": 9,
       "description": "Bring the King of Curses into your collection with this Ryomen Sukuna collectible figure.",
       "image": "/images/products/jujutsu-kaisen-sukuna-figure/front.png",
       "images": [
@@ -147,7 +181,7 @@
       "anime": "Bleach",
       "type": "posters",
       "price": 14.99,
-      "stock": 25,
+      "stock": 24,
       "description": "Bring the intense world of Bleach to your walls with this stylish anime poster. A great addition to any Bleach fan's collection.",
       "image": "/images/products/bleach-poster/front.png",
       "images": [
@@ -277,7 +311,7 @@
       "anime": "Chainsaw Man",
       "type": "figures",
       "price": 79.99,
-      "stock": 12,
+      "stock": 11,
       "description": "Bring the chaotic energy of Denji to your collection with this detailed Chainsaw Man collectible figure. A striking display piece for fans of the series.",
       "image": "/images/products/chainsaw-man-denji-figure/front.png",
       "images": [
@@ -375,7 +409,7 @@
       "anime": "Naruto",
       "type": "clothing",
       "price": 39.99,
-      "stock": 20,
+      "stock": 19,
       "description": "Represent the legendary Akatsuki with this stylish black hoodie featuring the iconic red cloud design. A perfect addition to any Naruto fan's streetwear collection.",
       "image": "/images/products/naruto-akatski-cloth/front.png",
       "images": [
@@ -390,7 +424,7 @@
       "anime": "Naruto",
       "type": "accessories",
       "price": 14.99,
-      "stock": 20,
+      "stock": 15,
       "description": "Show your allegiance to the Akatsuki with this stylish ring featuring the iconic red cloud symbol. A compact Naruto-inspired accessory for anime fans.",
       "image": "/images/products/naruto-akatski-ring/front.png",
       "images": [
@@ -428,33 +462,15 @@
       ]
     }
   ],
+
+
   "carts": [
     {
       "userId": "lVPO-pOXZ0M",
       "items": [
         {
-          "productId": "26",
-          "quantity": 5
-        },
-        {
-          "productId": "1",
-          "quantity": 2
-        },
-        {
-          "productId": "10",
+          "productId": "9",
           "quantity": 1
-        },
-        {
-          "productId": "7",
-          "quantity": 1
-        },
-        {
-          "productId": "18",
-          "quantity": 1
-        },
-        {
-          "productId": "6",
-          "quantity": 17
         }
       ],
       "id": "YA2c-jueIAQ"
@@ -470,10 +486,13 @@
       "id": "vJJEXnNkKys"
     }
   ],
+
+
   "wishlists": [
     {
       "userId": "lVPO-pOXZ0M",
       "productIds": [
+        "25",
         "6"
       ],
       "id": "3TfGxR3eIKo"
@@ -484,6 +503,8 @@
       "id": "L568brq3q0E"
     }
   ],
+
+
   "orders": [
     {
       "id": "SN8hUwh-f6w",
@@ -564,6 +585,214 @@
       "status": "Cancelled",
       "date": "2026-11-14T13:54:45.807Z",
       "stockRestored": true
+    },
+    {
+      "id": "OA8h2EyQ4p8",
+      "userId": "lVPO-pOXZ0M",
+      "items": [
+        {
+          "productId": "26",
+          "name": "Akatsuki Cloud Ring",
+          "image": "/images/products/naruto-akatski-ring/front.png",
+          "price": 14.99,
+          "quantity": 5
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "muhammed",
+        "email": "muhammed011@gmail.com",
+        "phone": "1236547890",
+        "address": "fghjkl;'",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "cod"
+      },
+      "total": 74.95,
+      "status": "Placed",
+      "date": "2026-11-18T05:36:39.422Z"
+    },
+    {
+      "id": "yJp89qIK0bQ",
+      "userId": "lVPO-pOXZ0M",
+      "items": [
+        {
+          "productId": "18",
+          "name": "Denji Figure",
+          "image": "/images/products/chainsaw-man-denji-figure/front.png",
+          "price": 79.99,
+          "quantity": 1
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "muhammed",
+        "email": "muhammed011@gmail.com",
+        "phone": "1236547890",
+        "address": "fgtyhuik  ghjkl ",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "cod"
+      },
+      "total": 79.99,
+      "status": "Placed",
+      "date": "2026-11-18T10:22:09.255Z"
+    },
+    {
+      "id": "XQDSCgU6dmY",
+      "userId": "lVPO-pOXZ0M",
+      "items": [
+        {
+          "productId": "7",
+          "name": "Attack on Titan Survey Corps Clothing",
+          "image": "/images/products/attack-on-titan-survey-corps-cloth/front.png",
+          "price": 29.99,
+          "quantity": 2
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "muhammed",
+        "email": "muhammed011@gmail.com",
+        "phone": "1236547890",
+        "address": "fgtyhuik  ghjkl ",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "cod"
+      },
+      "total": 59.98,
+      "status": "Placed",
+      "date": "2026-11-18T10:22:09.255Z"
+    },
+    {
+      "id": "wLWKsYcBiek",
+      "userId": "lVPO-pOXZ0M",
+      "items": [
+        {
+          "productId": "8",
+          "name": "Attack on Titan Katana",
+          "image": "/images/products/attack-on-titan-katana/front.png",
+          "price": 49.99,
+          "quantity": 1
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "muhammed",
+        "email": "muhammed011@gmail.com",
+        "phone": "1236547890",
+        "address": "fgtyhuik  ghjkl ",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "cod"
+      },
+      "total": 49.99,
+      "status": "Placed",
+      "date": "2026-11-18T10:22:09.255Z"
+    },
+    {
+      "id": "GTYfpziuUdg",
+      "userId": "lVPO-pOXZ0M",
+      "items": [
+        {
+          "productId": "4",
+          "name": "Ryomen Sukuna Figure",
+          "image": "/images/products/jujutsu-kaisen-sukuna-figure/front.png",
+          "price": 74.99,
+          "quantity": 1
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "muhammed",
+        "email": "muhammed011@gmail.com",
+        "phone": "1236547890",
+        "address": "fgtyhuik  ghjkl ",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "cod"
+      },
+      "total": 74.99,
+      "status": "Placed",
+      "date": "2026-11-18T10:22:09.255Z"
+    },
+    {
+      "id": "awDZrXgBNrk",
+      "userId": "lVPO-pOXZ0M",
+      "items": [
+        {
+          "productId": "9",
+          "name": "Bleach Anime Poster",
+          "image": "/images/products/bleach-poster/front.png",
+          "price": 14.99,
+          "quantity": 1
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "muhammed",
+        "email": "muhammed011@gmail.com",
+        "phone": "1236547890",
+        "address": "fgtyhuik  ghjkl ",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "cod"
+      },
+      "total": 14.99,
+      "status": "Placed",
+      "date": "2026-11-18T10:22:09.255Z"
+    },
+    {
+      "id": "jCqAq9qeOhc",
+      "userId": "lVPO-pOXZ0M",
+      "items": [
+        {
+          "productId": "6",
+          "name": "Demon Slayer Poster",
+          "image": "/images/products/demon-slayer-poster/front.png",
+          "price": 14.99,
+          "quantity": 17
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "muhammed",
+        "email": "muhammed011@gmail.com",
+        "phone": "1236547890",
+        "address": "fgtyhuik  ghjkl ",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "cod"
+      },
+      "total": 254.83,
+      "status": "Placed",
+      "date": "2026-11-18T10:22:09.255Z"
+    },
+    {
+      "id": "SxLtcPNLtvs",
+      "userId": "lVPO-pOXZ0M",
+      "items": [
+        {
+          "productId": "25",
+          "name": "Akatsuki Cloud Hoodie",
+          "image": "/images/products/naruto-akatski-cloth/front.png",
+          "price": 39.99,
+          "quantity": 1
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "muhammed",
+        "email": "muhammed011@gmail.com",
+        "phone": "1236547890",
+        "address": "fgtyhuik  ghjkl ",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "cod"
+      },
+      "total": 39.99,
+      "status": "Placed",
+      "date": "2026-11-18T10:22:09.255Z"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
