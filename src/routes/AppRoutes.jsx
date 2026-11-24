@@ -20,7 +20,7 @@ import AuthRoute from "./AuthRoute";
 function AppRoutes() {
   return (
     <Routes>
-      <Route element={<MainLayout />}>
+        <Route element={<AuthRoute monitorOnly><MainLayout /></AuthRoute>}>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:id" element={<ProductDetails />} />

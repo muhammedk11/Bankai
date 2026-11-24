@@ -60,12 +60,11 @@ function Register() {
     const password = formData.password;
     const confirmPassword = formData.confirmPassword;
 
-    // Check all fields
     if (!name || !email || !password || !confirmPassword) {
       return setError("All fields are required");
     }
 
-    // Email format validation
+    // Email validation
     const emailRegex =
       /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?)*\.[A-Za-z]{2,}$/;
 
@@ -78,32 +77,27 @@ function Register() {
       return setError("Please enter a valid email address");
     }
 
-    // Password length validation
+    // Password validation
     if (password.length < 8) {
       return setError("Password must contain at least 8 characters");
     }
 
-    // Uppercase validation
     if (!/[A-Z]/.test(password)) {
       return setError("Password must contain at least one uppercase letter");
     }
 
-    // Lowercase validation
     if (!/[a-z]/.test(password)) {
       return setError("Password must contain at least one lowercase letter");
     }
 
-    // Number validation
     if (!/[0-9]/.test(password)) {
       return setError("Password must contain at least one number");
     }
 
-    // Special character validation
     if (!/[^A-Za-z0-9\s]/.test(password)) {
       return setError("Password must contain at least one special character");
     }
 
-    // Confirm password validation
     if (password !== confirmPassword) {
       return setError("Passwords do not match");
     }
@@ -113,6 +107,7 @@ function Register() {
       name,
       email,
       password,
+      isBlocked: false,
     });
   };
 

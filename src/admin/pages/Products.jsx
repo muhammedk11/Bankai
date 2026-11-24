@@ -34,6 +34,7 @@ function Products() {
   const [showForm, setShowForm] = useState(false);
   const [editingProductId, setEditingProductId] = useState(null);
   const [formData, setFormData] = useState({ ...initialFormData });
+  const [productToDelete, setProductToDelete] = useState(null);
 
   const { data: products = [], isLoading, isError } =
     useAdminProducts();
@@ -116,14 +117,17 @@ function Products() {
     setShowForm(true);
   };
 
+  // Delete product
   const handleDelete = (id) => {
-    const confirmDelete = window.confirm(
-      "Move this product to Trash?"
-    );
+    setProductToDelete(id);
+  };
 
-    if (confirmDelete) {
-      deleteProductMutation.mutate(id);
-    }
+  const confirmDelete = () => {
+    deleteProductMutation.mutate(productToDelete, {
+      onSuccess: () => {
+        setProductToDelete(null);
+      },
+    });
   };
 
   // Show only active products
@@ -356,11 +360,58 @@ function Products() {
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        setCurrentPage={setCurrentPage}
+        onPageChange={setCurrentPage}
       />
+
+      {/* Delete Confirmation Modal */}
+      {productToDelete && (
+        <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="pointer-events-auto w-full max-w-md rounded-xl border border-white/10 bg-[#15151f] p-6 text-white shadow-2xl">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-red-500/10 text-red-400">
+                <span className="text-xl">!</span>
+              </div>
+
+              <h2 className="text-lg font-semibold">
+                Move Product to Trash?
+              </h2>
+            </div>
+
+            <p className="mb-6 text-sm leading-6 text-gray-400">
+              Are you sure you want to move this product to Trash?
+              You can restore it later from the Trash section.
+            </p>
+
+            {deleteProductMutation.isError && (
+              <p className="mb-4 text-sm text-red-400">
+                Failed to move product to Trash. Please try again.
+              </p>
+            )}
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setProductToDelete(null)}
+                disabled={deleteProductMutation.isPending}
+                className="rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-300 hover:bg-white/5"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={confirmDelete}
+                disabled={deleteProductMutation.isPending}
+                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+              >
+                {deleteProductMutation.isPending
+                  ? "Moving..."
+                  : "Move to Trash"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 export default Products;
-  

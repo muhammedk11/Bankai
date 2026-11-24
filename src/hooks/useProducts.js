@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import api from "../services/api";
 
@@ -7,7 +6,10 @@ export const useProducts = () => {
     queryKey: ["products"],
     queryFn: async () => {
       const response = await api.get("/products");
-      return response.data;
+
+      return response.data.filter(
+        (product) => !product.isDeleted
+      );
     },
     retry: 2,
   });

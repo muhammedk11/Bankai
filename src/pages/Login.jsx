@@ -30,6 +30,13 @@ function Login() {
         throw new Error("Invalid email or password");
       }
 
+      // Check whether the user is blocked
+      if (user.isBlocked) {
+        throw new Error(
+          "Your account has been blocked. Please contact support."
+        );
+      }
+
       return {
         id: user.id,
         name: user.name,
@@ -43,11 +50,7 @@ function Login() {
     },
 
     onError: (err) => {
-      setError(
-        err.message === "Invalid email or password"
-          ? err.message
-          : "Login failed. Please try again."
-      );
+      setError(err.message);
     },
   });
 

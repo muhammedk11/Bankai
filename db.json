@@ -12,49 +12,22 @@
       "id": "lVPO-pOXZ0M",
       "name": "muhammed",
       "email": "muhammed011@gmail.com",
-      "password": "qwer4321"
+      "password": "qwer4321",
+      "isBlocked": false
     },
     {
       "id": "JaM6rh9nXmU",
       "name": "levi",
       "email": "muhammed01@gmail.com",
-      "password": "qwer4321"
-    },
-    {
-      "name": "demo",
-      "email": "demo@gamil.com",
       "password": "qwer4321",
-      "id": "Avw31lvCbVQ"
+      "isBlocked": false
     },
     {
-      "name": "54214653421",
-      "email": "muhammed0111@gmail.com",
-      "password": "qwer4321",
-      "id": "_sFFNXq7GEo"
-    },
-    {
-      "name": "ronaldo",
-      "email": "muhammed@gmial.com",
-      "password": "12345qwer",
-      "id": "KuqJRxPo6ns"
-    },
-    {
-      "name": "muhammed k",
-      "email": "a@b",
-      "password": "12345678",
-      "id": "6UrD066WinQ"
-    },
-    {
-      "name": "aizen",
-      "email": "test@gaiml.com",
-      "password": "Bankai@123",
-      "id": "YT5V7VCcASc"
-    },
-    {
-      "name": "haiii",
-      "email": "hi@b.com",
-      "password": "Aa123654@",
-      "id": "bm3q-Hn2Y_I"
+      "name": "Aizen",
+      "email": "aizen@gmail.com",
+      "password": "Qwer4321@",
+      "isBlocked": false,
+      "id": "g7hVr42Bbcw"
     }
   ],
   "products": [
@@ -64,7 +37,7 @@
       "anime": "Attack on Titan",
       "type": "figures",
       "price": 89.99,
-      "stock": 5,
+      "stock": 4,
       "description": "Bring the terrifying power of the Armored Titan to your collection with this detailed collectible figure.",
       "image": "/images/products/attack-on-titan-armored-titan-figure/front.png",
       "images": [
@@ -85,7 +58,8 @@
       "image": "/images/products/demon-slayer-poster/front.png",
       "images": [
         "/images/products/demon-slayer-poster/front.png"
-      ]
+      ],
+      "isDeleted": true
     },
     {
       "id": "7",
@@ -93,14 +67,15 @@
       "anime": "Attack on Titan",
       "type": "clothing",
       "price": 29.99,
-      "stock": 10,
+      "stock": 9,
       "description": "Show your allegiance to the Survey Corps with this Attack on Titan-inspired clothing. A great addition to any fan's anime wardrobe.",
       "image": "/images/products/attack-on-titan-survey-corps-cloth/front.png",
       "images": [
         "/images/products/attack-on-titan-survey-corps-cloth/front.png",
         "/images/products/attack-on-titan-survey-corps-cloth/side.png",
         "/images/products/attack-on-titan-survey-corps-cloth/back.png"
-      ]
+      ],
+      "isDeleted": true
     },
     {
       "id": "8",
@@ -128,7 +103,8 @@
       "images": [
         "/images/products/attack-on-titan-mikasa-figure/front.png",
         "/images/products/attack-on-titan-mikasa-figure/side.png"
-      ]
+      ],
+      "isDeleted": true
     },
     {
       "id": "3",
@@ -142,7 +118,8 @@
       "images": [
         "/images/products/demon-slayer-akaza-figure/front.png",
         "/images/products/demon-slayer-akaza-figure/back.png"
-      ]
+      ],
+      "isDeleted": true
     },
     {
       "id": "4",
@@ -494,6 +471,16 @@
         }
       ],
       "id": "vJJEXnNkKys"
+    },
+    {
+      "userId": "g7hVr42Bbcw",
+      "items": [
+        {
+          "productId": "6",
+          "quantity": 1
+        }
+      ],
+      "id": "fwO9UZ_f8EA"
     }
   ],
   "wishlists": [
@@ -535,7 +522,7 @@
         "paymentMethod": "online"
       },
       "total": 359.96,
-      "status": "Placed",
+      "status": "Shipped",
       "date": "2026-11-14T09:30:46.928Z"
     },
     {
@@ -561,7 +548,7 @@
         "paymentMethod": "online"
       },
       "total": 359.96,
-      "status": "Cancelled",
+      "status": "Placed",
       "date": "2026-11-14T09:48:31.879Z",
       "stockRestored": true
     },
@@ -771,7 +758,7 @@
         "paymentMethod": "cod"
       },
       "total": 254.83,
-      "status": "Placed",
+      "status": "Processing",
       "date": "2026-11-18T10:22:09.255Z"
     },
     {
@@ -797,8 +784,60 @@
         "paymentMethod": "cod"
       },
       "total": 39.99,
-      "status": "Placed",
+      "status": "Pending",
       "date": "2026-11-18T10:22:09.255Z"
+    },
+    {
+      "id": "woepsZNEpOI",
+      "userId": "g7hVr42Bbcw",
+      "items": [
+        {
+          "productId": "1",
+          "name": "Armored Titan Figure",
+          "image": "/images/products/attack-on-titan-armored-titan-figure/front.png",
+          "price": 89.99,
+          "quantity": 1
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "Aizen",
+        "email": "aizen@gmail.com",
+        "phone": "1236547890",
+        "address": "cheching the cart",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "cod"
+      },
+      "total": 89.99,
+      "status": "Placed",
+      "date": "2026-11-24T06:32:46.801Z"
+    },
+    {
+      "id": "lriVx4RQgeg",
+      "userId": "g7hVr42Bbcw",
+      "items": [
+        {
+          "productId": "7",
+          "name": "Attack on Titan Survey Corps Clothing",
+          "image": "/images/products/attack-on-titan-survey-corps-cloth/front.png",
+          "price": 29.99,
+          "quantity": 1
+        }
+      ],
+      "shippingDetails": {
+        "fullName": "Aizen",
+        "email": "aizen@gmail.com",
+        "phone": "1236547890",
+        "address": "cheching the cart",
+        "city": "new york",
+        "postalCode": "1234554",
+        "country": "america",
+        "paymentMethod": "cod"
+      },
+      "total": 29.99,
+      "status": "Placed",
+      "date": "2026-11-24T06:32:46.801Z"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
