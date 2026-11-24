@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -12,6 +12,8 @@ import api from "../services/api";
 function Orders() {
   const user = useSelector((state) => state.auth.user);
   const queryClient = useQueryClient();
+
+  const [orderToCancel, setOrderToCancel] = useState(null);
 
   // Fetch logged-in user's orders
   const {
@@ -44,10 +46,7 @@ function Orders() {
         return;
       }
 
-      if (order.status === "Cancelled") {
-        // A previous cancellation may have failed during stock restoration.
-        // Continue the restoration without cancelling again.
-      } else {
+      if (order.status !== "Cancelled") {
         await api.patch(`/orders/${orderId}`, {
           status: "Cancelled",
         });
@@ -86,14 +85,18 @@ function Orders() {
     },
   });
 
+  // Open confirmation modal
   const handleCancelOrder = (orderId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to cancel this order? The purchased quantity will be returned to stock."
-    );
+    setOrderToCancel(orderId);
+  };
 
-    if (confirmed) {
-      cancelOrder.mutate(orderId);
-    }
+  // Confirm order cancellation
+  const confirmCancelOrder = () => {
+    cancelOrder.mutate(orderToCancel, {
+      onSuccess: () => {
+        setOrderToCancel(null);
+      },
+    });
   };
 
   if (!user?.id) {
@@ -352,6 +355,45 @@ function Orders() {
           Continue Shopping
         </Link>
       </div>
+
+      {/* Cancel Order Confirmation Modal */}
+      {orderToCancel && (
+        <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="pointer-events-auto w-full max-w-md rounded-xl border border-white/10 bg-zinc-900 p-6 text-white shadow-2xl">
+            <h2 className="text-lg font-semibold">
+              Cancel Order?
+            </h2>
+
+            <p className="mt-3 text-sm leading-6 text-gray-400">
+              Are you sure you want to cancel order{" "}
+              <span className="font-semibold text-white">
+                #{orderToCancel}
+              </span>
+              ? The purchased quantity will be returned to stock.
+            </p>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setOrderToCancel(null)}
+                disabled={cancelOrder.isPending}
+                className="rounded-lg border border-white/10 px-4 py-2 text-sm text-gray-300 hover:bg-white/5 disabled:opacity-50"
+              >
+                Keep Order
+              </button>
+
+              <button
+                onClick={confirmCancelOrder}
+                disabled={cancelOrder.isPending}
+                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+              >
+                {cancelOrder.isPending
+                  ? "Cancelling..."
+                  : "Confirm Cancellation"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

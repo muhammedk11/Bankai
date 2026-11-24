@@ -37,7 +37,7 @@
       "anime": "Attack on Titan",
       "type": "figures",
       "price": 89.99,
-      "stock": 4,
+      "stock": 5,
       "description": "Bring the terrifying power of the Armored Titan to your collection with this detailed collectible figure.",
       "image": "/images/products/attack-on-titan-armored-titan-figure/front.png",
       "images": [
@@ -814,8 +814,9 @@
         "paymentMethod": "cod"
       },
       "total": 89.99,
-      "status": "Placed",
-      "date": "2026-11-24T06:32:46.801Z"
+      "status": "Cancelled",
+      "date": "2026-11-24T06:32:46.801Z",
+      "stockRestored": true
     },
     {
       "id": "lriVx4RQgeg",
