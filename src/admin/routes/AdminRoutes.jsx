@@ -1,7 +1,6 @@
 
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import AdminLogin from "../pages/AdminLogin";
 import Dashboard from "../pages/Dashboard";
 import Products from "../pages/Products";
 import Users from "../pages/Users";
@@ -14,7 +13,11 @@ import AdminLayout from "../layouts/AdminLayout";
 function AdminRoutes() {
   return (
     <Routes>
-      <Route path="login" element={<AdminLogin />} />
+      {/* Redirect old admin login URL */}
+      <Route
+        path="login"
+        element={<Navigate to="/login" replace />}
+      />
 
       <Route
         element={
@@ -32,7 +35,7 @@ function AdminRoutes() {
 
       <Route
         path="*"
-        element={<Navigate to="/admin/login" replace />}
+        element={<Navigate to="/login" replace />}
       />
     </Routes>
   );

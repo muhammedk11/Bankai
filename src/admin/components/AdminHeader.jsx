@@ -15,7 +15,7 @@ function AdminHeader() {
   const handleLogout = () => {
     dispatch(logoutAdmin());
     localStorage.removeItem("admin");
-    navigate("/admin/login", { replace: true });
+    navigate("/login", { replace: true });
   };
 
   return (

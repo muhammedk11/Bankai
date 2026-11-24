@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import api from "../services/api";
 import { setCredentials } from "../store/slices/authSlice";
+import { setAdmin } from "../store/slices/adminAuthSlice";
 
 function Login() {
   const navigate = useNavigate();
@@ -20,17 +21,39 @@ function Login() {
 
   const loginMutation = useMutation({
     mutationFn: async ({ email, password }) => {
-      const response = await api.get("/users", {
+      // First check admin account
+      const adminResponse = await api.get("/admin", {
         params: { email },
       });
 
-      const user = response.data[0];
+      const admin = adminResponse.data[0];
+
+      if (admin) {
+        if (admin.password !== password) {
+          throw new Error("Invalid email or password");
+        }
+
+        return {
+          role: "admin",
+          user: {
+            id: admin.id,
+            name: admin.name,
+            email: admin.email,
+          },
+        };
+      }
+
+      // If no admin exists, check customer account
+      const userResponse = await api.get("/users", {
+        params: { email },
+      });
+
+      const user = userResponse.data[0];
 
       if (!user || user.password !== password) {
         throw new Error("Invalid email or password");
       }
 
-      // Check whether the user is blocked
       if (user.isBlocked) {
         throw new Error(
           "Your account has been blocked. Please contact support."
@@ -38,15 +61,23 @@ function Login() {
       }
 
       return {
-        id: user.id,
-        name: user.name,
-        email: user.email,
+        role: "customer",
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
       };
     },
 
-    onSuccess: (user) => {
-      dispatch(setCredentials(user));
-      navigate("/");
+    onSuccess: (result) => {
+      if (result.role === "admin") {
+        dispatch(setAdmin(result.user));
+        navigate("/admin", { replace: true });
+      } else {
+        dispatch(setCredentials(result.user));
+        navigate("/", { replace: true });
+      }
     },
 
     onError: (err) => {
@@ -97,6 +128,7 @@ function Login() {
           placeholder="Email Address"
           value={formData.email}
           onChange={handleChange}
+          required
           className="w-full rounded-lg bg-gray-800 p-3 outline-none focus:ring-2 focus:ring-purple-500"
         />
 
@@ -106,6 +138,7 @@ function Login() {
           placeholder="Password"
           value={formData.password}
           onChange={handleChange}
+          required
           className="w-full rounded-lg bg-gray-800 p-3 outline-none focus:ring-2 focus:ring-purple-500"
         />
 
@@ -123,7 +156,10 @@ function Login() {
 
         <p className="text-center text-sm text-gray-400">
           Don't have an account?{" "}
-          <Link to="/register" className="text-purple-400 hover:underline">
+          <Link
+            to="/register"
+            className="text-purple-400 hover:underline"
+          >
             Register
           </Link>
         </p>
