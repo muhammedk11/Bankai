@@ -1,5 +1,5 @@
 {
-  "admin":[
+  "admin": [
     {
       "id": "bankai-admin-001",
       "name": "BANKAI Admin",
@@ -57,8 +57,6 @@
       "id": "bm3q-Hn2Y_I"
     }
   ],
-  
-
   "products": [
     {
       "id": "1",
@@ -73,7 +71,8 @@
         "/images/products/attack-on-titan-armored-titan-figure/front.png",
         "/images/products/attack-on-titan-armored-titan-figure/side.png",
         "/images/products/attack-on-titan-armored-titan-figure/back.png"
-      ]
+      ],
+      "isDeleted": true
     },
     {
       "id": "6",
@@ -94,7 +93,7 @@
       "anime": "Attack on Titan",
       "type": "clothing",
       "price": 29.99,
-      "stock": 18,
+      "stock": 10,
       "description": "Show your allegiance to the Survey Corps with this Attack on Titan-inspired clothing. A great addition to any fan's anime wardrobe.",
       "image": "/images/products/attack-on-titan-survey-corps-cloth/front.png",
       "images": [
@@ -460,10 +459,21 @@
         "/images/products/one-piece-jolly-roger-necklace/side.png",
         "/images/products/one-piece-jolly-roger-necklace/back.png"
       ]
+    },
+    {
+      "id": "hqakHvS9YJ4",
+      "name": "Demon Slayer Poster",
+      "anime": "demon slayer",
+      "type": "poster",
+      "price": 15.99,
+      "stock": 15,
+      "description": "demon slayer nine hashira poster",
+      "image": "/images/products/demon-slayer-hashira-poster/front.png",
+      "images": [
+        "/images/products/demon-slayer-hashira-poster/front.png"
+      ]
     }
   ],
-
-
   "carts": [
     {
       "userId": "lVPO-pOXZ0M",
@@ -486,8 +496,6 @@
       "id": "vJJEXnNkKys"
     }
   ],
-
-
   "wishlists": [
     {
       "userId": "lVPO-pOXZ0M",
@@ -503,8 +511,6 @@
       "id": "L568brq3q0E"
     }
   ],
-
-
   "orders": [
     {
       "id": "SN8hUwh-f6w",
