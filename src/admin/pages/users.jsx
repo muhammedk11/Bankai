@@ -79,6 +79,7 @@ function Users() {
         >
           {user.isBlocked ? "Unblock" : "Block"}
         </button>
+
       ),
     },
   ];

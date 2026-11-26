@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 
 const animeList = [
@@ -31,20 +30,19 @@ const animeList = [
     image: "/images/collections/jujutsu-kaisen.jpg",
   },
   {
-  name: "Naruto",
-  image: "/images/collections/naruto.jpg",
-},
-{
-  name: "One Piece",
-  image: "/images/collections/one-piece.jpg",
-}
+    name: "Naruto",
+    image: "/images/collections/naruto.jpg",
+  },
+  {
+    name: "One Piece",
+    image: "/images/collections/one-piece.jpg",
+  },
 ];
 
 function ShopByAnime() {
   return (
     <section className="min-h-screen bg-zinc-950 px-5 py-16 text-white">
       <div className="mx-auto max-w-7xl">
-
         {/* Page Heading */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl font-bold md:text-5xl">
@@ -81,10 +79,8 @@ function ShopByAnime() {
             </Link>
           ))}
         </div>
-
       </div>
     </section>
   );
 }
-
 export default ShopByAnime;

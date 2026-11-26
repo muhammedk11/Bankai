@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import api from "../../services/api";
 
@@ -13,10 +12,7 @@ const fetchDashboardStats = async () => {
     totalProducts: products.data.length,
     totalUsers: users.data.length,
     totalOrders: orders.data.length,
-    totalRevenue: orders.data.reduce(
-      (total, order) => total + Number(order.total || 0),
-      0
-    ),
+    totalRevenue: orders.data.reduce((total, order) => total + Number(order.total || 0),0)
   };
 };
 

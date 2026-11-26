@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  Link,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -23,8 +19,7 @@ function Checkout() {
 
   const isBuyNow = Boolean(buyNowProductId);
 
-  const isCartBuyNow =
-    isBuyNow && searchParams.get("source") === "cart";
+  const isCartBuyNow = isBuyNow && searchParams.get("source") === "cart";
 
   const {
     cart,
@@ -62,8 +57,7 @@ function Checkout() {
   const cartItems = (cart?.items || [])
     .map((item) => {
       const product = products.find(
-        (product) =>
-          String(product.id) === String(item.productId)
+        (product) => String(product.id) === String(item.productId),
       );
 
       if (!product) return null;
@@ -77,29 +71,25 @@ function Checkout() {
 
   // Selected Buy Now product
   const selectedProduct = products.find(
-    (product) =>
-      String(product.id) === String(buyNowProductId)
+    (product) => String(product.id) === String(buyNowProductId),
   );
 
- const buyNowItems =
-  selectedProduct && Number(selectedProduct.stock) > 0
-    ? [
-        {
-          ...selectedProduct,
-          quantity: Math.max(1, requestedQuantity),
-        },
-      ]
-    : [];
+  const buyNowItems =
+    selectedProduct && Number(selectedProduct.stock) > 0
+      ? [
+          {
+            ...selectedProduct,
+            quantity: Math.max(1, requestedQuantity),
+          },
+        ]
+      : [];
 
   // Choose Buy Now item or normal cart items
-  const checkoutItems = isBuyNow
-    ? buyNowItems
-    : cartItems;
+  const checkoutItems = isBuyNow ? buyNowItems : cartItems;
 
   const subtotal = checkoutItems.reduce(
-    (total, item) =>
-      total + Number(item.price) * item.quantity,
-    0
+    (total, item) => total + Number(item.price) * item.quantity,
+    0,
   );
 
   // Remove a purchased cart item
@@ -112,7 +102,7 @@ function Checkout() {
       },
       onError: () => {
         setErrorMessage(
-          "Order placed successfully, but the purchased item could not be removed from your cart. Please try again."
+          "Order placed successfully, but the purchased item could not be removed from your cart. Please try again.",
         );
       },
     });
@@ -120,88 +110,87 @@ function Checkout() {
 
   // Place orders
   const placeOrder = useMutation({
-  mutationFn: async (orders) => {
-    // Get the latest product stock from the server
-    const latestProducts = await Promise.all(
-      orders.map(async (order) => {
-        const productId = order.items[0].productId;
+    mutationFn: async (orders) => {
+      // Get the latest product stock from the server
+      const latestProducts = await Promise.all(
+        orders.map(async (order) => {
+          const productId = order.items[0].productId;
 
-        const response = await api.get(`/products/${productId}`);
+          const response = await api.get(`/products/${productId}`);
 
-        return {
-          product: response.data,
-          quantity: order.items[0].quantity,
-        };
-      })
-    );
+          return {
+            product: response.data,
+            quantity: order.items[0].quantity,
+          };
+        }),
+      );
 
-    // Validate stock before updating anything
-    for (const item of latestProducts) {
-      if (Number(item.product.stock) < item.quantity) {
-        throw new Error(
-          `Insufficient stock for ${item.product.name}. Available stock: ${item.product.stock}.`
-        );
+      // Validate stock before updating anything
+      for (const item of latestProducts) {
+        if (Number(item.product.stock) < item.quantity) {
+          throw new Error(
+            `Insufficient stock for ${item.product.name}. Available stock: ${item.product.stock}.`,
+          );
+        }
       }
-    }
 
-    // Reduce product stock
-    await Promise.all(
-      latestProducts.map((item) =>
-        api.patch(`/products/${item.product.id}`, {
-          stock: Number(item.product.stock) - item.quantity,
-        })
-      )
-    );
+      // Reduce product stock
+      await Promise.all(
+        latestProducts.map((item) =>
+          api.patch(`/products/${item.product.id}`, {
+            stock: Number(item.product.stock) - item.quantity,
+          }),
+        ),
+      );
 
-    // Create orders
-    const responses = await Promise.all(
-      orders.map((order) => api.post("/orders", order))
-    );
+      // Create orders
+      const responses = await Promise.all(
+        orders.map((order) => api.post("/orders", order)),
+      );
 
-    return responses;
-  },
+      return responses;
+    },
 
-  onSuccess: () => {
-    setOrderPlaced(true);
+    onSuccess: () => {
+      setOrderPlaced(true);
 
-    queryClient.invalidateQueries({
-      queryKey: ["orders", user?.id],
-    });
+      queryClient.invalidateQueries({
+        queryKey: ["orders", user?.id],
+      });
 
-    // Refresh product stock throughout the application
-    queryClient.invalidateQueries({
-      queryKey: ["products"],
-    });
+      // Refresh product stock throughout the application
+      queryClient.invalidateQueries({
+        queryKey: ["products"],
+      });
 
-    if (isCartBuyNow) {
-      handleRemovePurchasedItem();
-      return;
-    }
+      if (isCartBuyNow) {
+        handleRemovePurchasedItem();
+        return;
+      }
 
-    if (isBuyNow) {
-      navigate("/orders");
-      return;
-    }
-
-    clearCart.mutate(undefined, {
-      onSuccess: () => {
+      if (isBuyNow) {
         navigate("/orders");
-      },
-      onError: () => {
-        setErrorMessage(
-          "Your orders were placed successfully, but your cart could not be cleared. Try clearing it again."
-        );
-      },
-    });
-  },
+        return;
+      }
 
-  onError: (error) => {
-    setErrorMessage(
-      error.message ||
-        "Could not place your order. Please try again."
-    );
-  },
-});
+      clearCart.mutate(undefined, {
+        onSuccess: () => {
+          navigate("/orders");
+        },
+        onError: () => {
+          setErrorMessage(
+            "Your orders were placed successfully, but your cart could not be cleared. Try clearing it again.",
+          );
+        },
+      });
+    },
+
+    onError: (error) => {
+      setErrorMessage(
+        error.message || "Could not place your order. Please try again.",
+      );
+    },
+  });
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -231,9 +220,7 @@ function Checkout() {
         navigate("/orders");
       },
       onError: () => {
-        setErrorMessage(
-          "Could not clear your cart. Please try again."
-        );
+        setErrorMessage("Could not clear your cart. Please try again.");
       },
     });
   };
@@ -242,15 +229,15 @@ function Checkout() {
     e.preventDefault();
     setErrorMessage("");
     const insufficientStock = checkoutItems.find(
-  (item) => Number(item.stock) < item.quantity
-);
+      (item) => Number(item.stock) < item.quantity,
+    );
 
-if (insufficientStock) {
-  setErrorMessage(
-    `Insufficient stock for ${insufficientStock.name}. Available stock: ${insufficientStock.stock}.`
-  );
-  return;
-}
+    if (insufficientStock) {
+      setErrorMessage(
+        `Insufficient stock for ${insufficientStock.name}. Available stock: ${insufficientStock.stock}.`,
+      );
+      return;
+    }
 
     if (
       !user?.id ||
@@ -292,14 +279,9 @@ if (insufficientStock) {
   if (!user?.id) {
     return (
       <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
-        <h1 className="text-3xl font-bold">
-          Please Login
-        </h1>
+        <h1 className="text-3xl font-bold">Please Login</h1>
 
-        <Link
-          to="/login"
-          className="mt-6 rounded-lg bg-purple-600 px-6 py-3"
-        >
+        <Link to="/login" className="mt-6 rounded-lg bg-purple-600 px-6 py-3">
           Login
         </Link>
       </section>
@@ -315,15 +297,11 @@ if (insufficientStock) {
   }
 
   if (productsError || (!isBuyNow && cartError)) {
-    const isRetrying =
-      productsFetching ||
-      (!isBuyNow && cartFetching);
+    const isRetrying = productsFetching || (!isBuyNow && cartFetching);
 
     return (
       <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
-        <p className="mb-5 text-red-400">
-          Could not load checkout details.
-        </p>
+        <p className="mb-5 text-red-400">Could not load checkout details.</p>
 
         <button
           onClick={handleRetry}
@@ -340,9 +318,7 @@ if (insufficientStock) {
     return (
       <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-white">
         <h1 className="text-3xl font-bold">
-          {isBuyNow
-            ? "Product Unavailable"
-            : "Your cart is empty"}
+          {isBuyNow ? "Product Unavailable" : "Your cart is empty"}
         </h1>
 
         <p className="mt-3 text-gray-400">
@@ -364,13 +340,10 @@ if (insufficientStock) {
   return (
     <section className="min-h-screen bg-zinc-950 px-8 py-16 text-white">
       <div className="mx-auto max-w-7xl">
-        <h1 className="mb-10 text-4xl font-bold">
-          Checkout
-        </h1>
+        <h1 className="mb-10 text-4xl font-bold">Checkout</h1>
 
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-3 gap-10">
-
             {/* Shipping Information */}
             <div className="col-span-2 rounded-xl border border-white/10 bg-zinc-900 p-8">
               <h2 className="mb-6 text-2xl font-semibold">
@@ -457,9 +430,7 @@ if (insufficientStock) {
                     onChange={handleChange}
                   />
 
-                  <span>
-                    Cash on Delivery (Demo)
-                  </span>
+                  <span>Cash on Delivery (Demo)</span>
                 </label>
 
                 <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-white/10 bg-zinc-800 p-4">
@@ -471,9 +442,7 @@ if (insufficientStock) {
                     onChange={handleChange}
                   />
 
-                  <span>
-                    Online Payment (Demo)
-                  </span>
+                  <span>Online Payment (Demo)</span>
                 </label>
               </div>
 
@@ -484,9 +453,7 @@ if (insufficientStock) {
 
             {/* Order Summary */}
             <div className="h-fit rounded-xl border border-white/10 bg-zinc-900 p-6">
-              <h2 className="text-xl font-bold">
-                Order Summary
-              </h2>
+              <h2 className="text-xl font-bold">Order Summary</h2>
 
               <div className="mt-6 space-y-4">
                 {checkoutItems.map((item) => (
@@ -516,25 +483,17 @@ if (insufficientStock) {
               </div>
 
               <Link
-                to={
-                  isBuyNow
-                    ? `/products/${buyNowProductId}`
-                    : "/cart"
-                }
+                to={isBuyNow ? `/products/${buyNowProductId}` : "/cart"}
                 className="mt-6 block text-center text-sm text-gray-400 hover:text-white"
               >
-                {isBuyNow
-                  ? "Back to Product"
-                  : "Back to Cart"}
+                {isBuyNow ? "Back to Product" : "Back to Cart"}
               </Link>
             </div>
           </div>
 
           {/* Error Message */}
           {errorMessage && (
-            <p className="mt-5 text-center text-red-400">
-              {errorMessage}
-            </p>
+            <p className="mt-5 text-center text-red-400">{errorMessage}</p>
           )}
 
           {/* Order Button / Cart Cleanup Retry */}
@@ -542,10 +501,7 @@ if (insufficientStock) {
             <button
               type="button"
               onClick={handleCartCleanupRetry}
-              disabled={
-                clearCart.isPending ||
-                removeItem.isPending
-              }
+              disabled={clearCart.isPending || removeItem.isPending}
               className="mt-8 w-full rounded-lg bg-purple-600 px-8 py-4 font-semibold transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {clearCart.isPending || removeItem.isPending
@@ -563,9 +519,7 @@ if (insufficientStock) {
               }
               className="mt-8 w-full rounded-lg bg-purple-600 px-8 py-4 font-semibold transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {placeOrder.isPending
-                ? "Placing Orders..."
-                : "Place Order"}
+              {placeOrder.isPending ? "Placing Orders..." : "Place Order"}
             </button>
           )}
         </form>

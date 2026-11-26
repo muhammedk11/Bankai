@@ -1,13 +1,10 @@
-
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../store/slices/authSlice";
 
 function Account() {
-  const { user, isAuthenticated } = useSelector(
-    (state) => state.auth
-  );
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,20 +25,13 @@ function Account() {
   return (
     <div className="min-h-screen bg-gray-950 px-6 py-12 text-white">
       <div className="mx-auto max-w-4xl">
+        <h1 className="mb-2 text-3xl font-bold text-purple-500">My Account</h1>
 
-        <h1 className="mb-2 text-3xl font-bold text-purple-500">
-          My Account
-        </h1>
-
-        <p className="mb-8 text-gray-400">
-          Manage yourBANKAI VAULT account.
-        </p>
+        <p className="mb-8 text-gray-400">Manage yourBANKAI VAULT account.</p>
 
         {/* Personal Information */}
         <div className="rounded-xl bg-gray-900 p-6">
-          <h2 className="mb-6 text-xl font-semibold">
-            Personal Information
-          </h2>
+          <h2 className="mb-6 text-xl font-semibold">Personal Information</h2>
 
           <div className="space-y-5">
             <div>
@@ -58,7 +48,6 @@ function Account() {
 
         {/* Account Options */}
         <div className="mt-6 grid gap-6 sm:grid-cols-2">
-
           <Link
             to="/orders"
             className="rounded-xl bg-gray-900 p-6 transition hover:bg-gray-800"
@@ -78,7 +67,6 @@ function Account() {
               View your saved anime merchandise.
             </p>
           </Link>
-
         </div>
 
         {/* Logout */}
@@ -88,7 +76,6 @@ function Account() {
         >
           Logout
         </button>
-
       </div>
     </div>
   );

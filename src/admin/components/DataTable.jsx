@@ -1,4 +1,3 @@
-
 function DataTable({ columns, data }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-200">

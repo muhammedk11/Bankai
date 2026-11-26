@@ -606,7 +606,7 @@
         "paymentMethod": "cod"
       },
       "total": 74.95,
-      "status": "Placed",
+      "status": "Cancelled",
       "date": "2026-11-18T05:36:39.422Z"
     },
     {

@@ -1,10 +1,4 @@
-
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-
+import { useQuery,useMutation,useQueryClient,} from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import api from "../services/api";
 
@@ -18,10 +12,7 @@ export const useCart = (userId) => {
     queryKey,
     enabled: Boolean(userId),
     queryFn: async () => {
-      const response = await api.get("/carts", {
-        params: { userId },
-      });
-
+      const response = await api.get("/carts", {params: { userId }});
       return response.data[0] || null;
     },
     retry: 2,
@@ -29,10 +20,7 @@ export const useCart = (userId) => {
 
   // Get the latest cart record from the server
   const getCartRecord = async () => {
-    const response = await api.get("/carts", {
-      params: { userId },
-    });
-
+    const response = await api.get("/carts", {params: { userId }});
     return response.data[0] || null;
   };
 

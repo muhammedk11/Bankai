@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,9 +12,7 @@ function Navbar() {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  const { user, isAuthenticated } = useSelector(
-    (state) => state.auth
-  );
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
 
   const { cart } = useCart(user?.id);
   const { data: products = [] } = useProducts();
@@ -33,8 +30,7 @@ function Navbar() {
   }, [searchTerm]);
 
   // Check whether the debounce is still waiting
-  const isSearchPending =
-    searchTerm.trim() !== debouncedSearch.trim();
+  const isSearchPending = searchTerm.trim() !== debouncedSearch.trim();
 
   // Filter products for live search suggestions
   const searchResults = products
@@ -49,7 +45,9 @@ function Navbar() {
         product.type,
         product.description,
       ].some((value) =>
-        String(value || "").toLowerCase().includes(search)
+        String(value || "")
+          .toLowerCase()
+          .includes(search),
       );
     })
     .slice(0, 5);
@@ -95,7 +93,6 @@ function Navbar() {
   return (
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-zinc-950 px-6 py-4 text-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-8">
-
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img
@@ -106,10 +103,7 @@ function Navbar() {
         </Link>
 
         {/* Search Bar */}
-        <form
-          onSubmit={handleSearchSubmit}
-          className="relative w-80 shrink-0"
-        >
+        <form onSubmit={handleSearchSubmit} className="relative w-80 shrink-0">
           <div className="flex items-center rounded-lg border border-white/10 bg-zinc-900 px-4 focus-within:border-purple-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +133,6 @@ function Navbar() {
           {/* Live Suggestions */}
           {searchTerm.trim() && (
             <div className="absolute left-0 top-full z-50 mt-2 w-full overflow-hidden rounded-xl border border-white/10 bg-zinc-900 shadow-xl">
-
               {isSearchPending ? (
                 <p className="p-4 text-center text-sm text-gray-400">
                   Searching...
@@ -196,13 +189,8 @@ function Navbar() {
 
         {/* Navigation */}
         <div className="flex items-center gap-8">
-
           {navLinks.map((link) => (
-            <NavLink
-              key={link.path}
-              to={link.path}
-              className={linkStyle}
-            >
+            <NavLink key={link.path} to={link.path} className={linkStyle}>
               {link.name}
             </NavLink>
           ))}
@@ -217,7 +205,6 @@ function Navbar() {
             }
           >
             Cart
-
             {cartCount > 0 && (
               <span className="absolute -right-4 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-purple-600 px-1 text-xs font-bold text-white">
                 {cartCount > 99 ? "99+" : cartCount}
@@ -226,10 +213,7 @@ function Navbar() {
           </NavLink>
 
           {/* Shop by Anime */}
-          <NavLink
-            to="/shop-by-anime"
-            className={linkStyle}
-          >
+          <NavLink to="/shop-by-anime" className={linkStyle}>
             Shop by Anime
           </NavLink>
 
@@ -279,13 +263,10 @@ function Navbar() {
             </button>
 
             <div className="invisible absolute right-0 top-full z-50 mt-3 w-52 translate-y-2 rounded-xl border border-white/10 bg-zinc-900 p-2 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-
               {isAuthenticated ? (
                 <>
                   <div className="border-b border-white/10 px-4 py-3">
-                    <p className="font-semibold text-white">
-                      {user?.name}
-                    </p>
+                    <p className="font-semibold text-white">{user?.name}</p>
 
                     <p className="truncate text-xs text-gray-400">
                       {user?.email}
@@ -325,7 +306,6 @@ function Navbar() {
               )}
             </div>
           </div>
-
         </div>
       </div>
     </nav>

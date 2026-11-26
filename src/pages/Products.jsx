@@ -1,4 +1,3 @@
-
 import { useSearchParams, Link } from "react-router-dom";
 import { useProducts } from "../hooks/useProducts";
 
@@ -40,23 +39,19 @@ function Products() {
 
   // Filter products
   const filteredProducts = products.filter((product) => {
-    const animeMatch =
-      !selectedAnime || product.anime === selectedAnime;
+    const animeMatch = !selectedAnime || product.anime === selectedAnime;
 
-    const typeMatch =
-      !selectedType || product.type === selectedType;
+    const typeMatch = !selectedType || product.type === selectedType;
 
     const search = selectedSearch.trim().toLowerCase();
 
     const searchMatch =
       !search ||
-      [
-        product.name,
-        product.anime,
-        product.type,
-        product.description,
-      ].some((value) =>
-        String(value || "").toLowerCase().includes(search)
+      [product.name, product.anime, product.type, product.description].some(
+        (value) =>
+          String(value || "")
+            .toLowerCase()
+            .includes(search),
       );
 
     return animeMatch && typeMatch && searchMatch;
@@ -66,34 +61,28 @@ function Products() {
   const sortedProducts = [...filteredProducts];
 
   if (selectedSort === "low-to-high") {
-    sortedProducts.sort(
-      (a, b) => Number(a.price) - Number(b.price)
-    );
+    sortedProducts.sort((a, b) => Number(a.price) - Number(b.price));
   }
 
   if (selectedSort === "high-to-low") {
-    sortedProducts.sort(
-      (a, b) => Number(b.price) - Number(a.price)
-    );
+    sortedProducts.sort((a, b) => Number(b.price) - Number(a.price));
   }
 
   // Pagination
   const itemsPerPage = 8;
 
-  const totalPages = Math.ceil(
-    sortedProducts.length / itemsPerPage
-  );
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
 
   const currentPage = Math.min(
     Math.max(Number(searchParams.get("page")) || 1, 1),
-    Math.max(totalPages, 1)
+    Math.max(totalPages, 1),
   );
 
   const startIndex = (currentPage - 1) * itemsPerPage;
 
   const paginatedProducts = sortedProducts.slice(
     startIndex,
-    startIndex + itemsPerPage
+    startIndex + itemsPerPage,
   );
 
   // Update URL filters
@@ -122,16 +111,13 @@ function Products() {
   return (
     <section className="min-h-screen bg-zinc-950 px-8 py-16 text-white">
       <div className="mx-auto max-w-7xl">
-
         {/* Page Heading */}
         <div className="mb-10">
           <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-purple-400">
             Explore our collection
           </p>
 
-          <h1 className="text-4xl font-bold">
-            All Products
-          </h1>
+          <h1 className="text-4xl font-bold">All Products</h1>
 
           <p className="mt-3 text-gray-400">
             Discover merchandise from your favourite anime.
@@ -140,13 +126,10 @@ function Products() {
 
         {/* Filters */}
         <div className="mb-10 flex items-center gap-5">
-
           {/* Anime Filter */}
           <select
             value={selectedAnime}
-            onChange={(e) =>
-              handleFilterChange("anime", e.target.value)
-            }
+            onChange={(e) => handleFilterChange("anime", e.target.value)}
             className="rounded-lg border border-white/10 bg-zinc-900 px-4 py-3 text-white outline-none focus:border-purple-500"
           >
             <option value="">All Anime</option>
@@ -164,9 +147,7 @@ function Products() {
           {/* Type Filter */}
           <select
             value={selectedType}
-            onChange={(e) =>
-              handleFilterChange("type", e.target.value)
-            }
+            onChange={(e) => handleFilterChange("type", e.target.value)}
             className="rounded-lg border border-white/10 bg-zinc-900 px-4 py-3 text-white outline-none focus:border-purple-500"
           >
             <option value="">All Types</option>
@@ -180,9 +161,7 @@ function Products() {
           {/* Price Sorting */}
           <select
             value={selectedSort}
-            onChange={(e) =>
-              handleFilterChange("sort", e.target.value)
-            }
+            onChange={(e) => handleFilterChange("sort", e.target.value)}
             className="rounded-lg border border-white/10 bg-zinc-900 px-4 py-3 text-white outline-none focus:border-purple-500"
           >
             <option value="">Default Sorting</option>
@@ -197,7 +176,6 @@ function Products() {
           >
             Clear Filters
           </button>
-
         </div>
 
         {/* Active Search */}
@@ -220,7 +198,6 @@ function Products() {
         {/* Product Grid */}
         {paginatedProducts.length > 0 ? (
           <div className="grid grid-cols-4 gap-6">
-
             {paginatedProducts.map((product) => (
               <Link
                 key={product.id}
@@ -236,31 +213,22 @@ function Products() {
                 </div>
 
                 <div className="p-4">
-                  <p className="text-xs text-purple-400">
-                    {product.anime}
-                  </p>
+                  <p className="text-xs text-purple-400">{product.anime}</p>
 
-                  <h2 className="mt-2 font-semibold">
-                    {product.name}
-                  </h2>
+                  <h2 className="mt-2 font-semibold">{product.name}</h2>
 
                   <p className="mt-3 text-lg font-bold text-white">
                     ${Number(product.price).toFixed(2)}
                   </p>
 
-                  <p className="mt-3 text-sm text-gray-400">
-                    View Product →
-                  </p>
+                  <p className="mt-3 text-sm text-gray-400">View Product →</p>
                 </div>
               </Link>
             ))}
-
           </div>
         ) : (
           <div className="py-20 text-center">
-            <h2 className="text-2xl font-semibold">
-              No products found
-            </h2>
+            <h2 className="text-2xl font-semibold">No products found</h2>
 
             <p className="mt-3 text-gray-400">
               Try changing or clearing your filters.
@@ -271,7 +239,6 @@ function Products() {
         {/* Pagination Buttons */}
         {totalPages > 1 && (
           <div className="mt-12 flex items-center justify-center gap-3">
-
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
@@ -301,10 +268,8 @@ function Products() {
             >
               Next
             </button>
-
           </div>
         )}
-
       </div>
     </section>
   );

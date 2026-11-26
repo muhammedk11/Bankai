@@ -1,4 +1,3 @@
-
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -39,7 +38,7 @@ function Cart() {
 
   const handleBuyNow = (item) => {
     navigate(
-      `/checkout?buyNow=${item.id}&quantity=${item.quantity}&source=cart`
+      `/checkout?buyNow=${item.id}&quantity=${item.quantity}&source=cart`,
     );
   };
 
@@ -47,8 +46,7 @@ function Cart() {
   const cartItems = (cart?.items || [])
     .map((item) => {
       const product = products.find(
-        (product) =>
-          String(product.id) === String(item.productId)
+        (product) => String(product.id) === String(item.productId),
       );
 
       if (!product) return null;
@@ -61,26 +59,21 @@ function Cart() {
     .filter(Boolean);
 
   const subtotal = cartItems.reduce(
-    (total, item) =>
-      total + Number(item.price) * item.quantity,
-    0
+    (total, item) => total + Number(item.price) * item.quantity,
+    0,
   );
 
   const totalItems = cartItems.reduce(
     (total, item) => total + item.quantity,
-    0
+    0,
   );
 
   if (!user) {
     return (
       <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 px-8 text-white">
-        <h1 className="text-3xl font-bold">
-          Please Login
-        </h1>
+        <h1 className="text-3xl font-bold">Please Login</h1>
 
-        <p className="mt-4 text-gray-400">
-          Login to view your shopping cart.
-        </p>
+        <p className="mt-4 text-gray-400">Login to view your shopping cart.</p>
 
         <Link
           to="/login"
@@ -95,9 +88,7 @@ function Cart() {
   if (isLoading) {
     return (
       <section className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
-        <p className="text-lg text-gray-400">
-          Loading your cart...
-        </p>
+        <p className="text-lg text-gray-400">Loading your cart...</p>
       </section>
     );
   }
@@ -123,9 +114,7 @@ function Cart() {
   if (cartItems.length === 0) {
     return (
       <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 px-8 text-white">
-        <h1 className="text-4xl font-bold">
-          Your Cart is Empty
-        </h1>
+        <h1 className="text-4xl font-bold">Your Cart is Empty</h1>
 
         <p className="mt-4 text-gray-400">
           Looks like you haven't added anything yet.
@@ -144,7 +133,6 @@ function Cart() {
   return (
     <section className="min-h-screen bg-zinc-950 px-8 py-16 text-white">
       <div className="mx-auto max-w-7xl">
-
         {/* Heading */}
         <div className="mb-10 flex items-center justify-between">
           <div>
@@ -152,9 +140,7 @@ function Cart() {
               Your selections
             </p>
 
-            <h1 className="text-4xl font-bold">
-              Shopping Cart
-            </h1>
+            <h1 className="text-4xl font-bold">Shopping Cart</h1>
           </div>
 
           <button
@@ -167,16 +153,13 @@ function Cart() {
         </div>
 
         {/* Mutation Error Messages */}
-        {(updateItem.isError ||
-          removeItem.isError ||
-          clearCart.isError) && (
+        {(updateItem.isError || removeItem.isError || clearCart.isError) && (
           <p className="mb-6 rounded-lg border border-red-500/20 bg-red-500/10 p-4 text-sm text-red-400">
             Could not update your cart. Please try again.
           </p>
         )}
 
         <div className="grid grid-cols-3 gap-10">
-
           {/* Cart Items */}
           <div className="col-span-2 space-y-5">
             {cartItems.map((item) => (
@@ -196,9 +179,7 @@ function Cart() {
                 {/* Product Information */}
                 <div className="flex flex-1 items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-semibold">
-                      {item.name}
-                    </h2>
+                    <h2 className="text-lg font-semibold">{item.name}</h2>
 
                     <p className="mt-2 text-purple-400">
                       ${Number(item.price).toFixed(2)}
@@ -214,10 +195,7 @@ function Cart() {
                             stock: item.stock,
                           })
                         }
-                        disabled={
-                          item.quantity <= 1 ||
-                          updateItem.isPending
-                        }
+                        disabled={item.quantity <= 1 || updateItem.isPending}
                         className="px-4 py-2 transition hover:bg-zinc-800 disabled:opacity-40"
                       >
                         −
@@ -236,8 +214,7 @@ function Cart() {
                           })
                         }
                         disabled={
-                          item.quantity >= item.stock ||
-                          updateItem.isPending
+                          item.quantity >= item.stock || updateItem.isPending
                         }
                         className="px-4 py-2 transition hover:bg-zinc-800 disabled:opacity-40"
                       >
@@ -254,9 +231,7 @@ function Cart() {
 
                     <button
                       onClick={() => handleBuyNow(item)}
-                      disabled={
-                        Number(item.stock) < item.quantity
-                      }
+                      disabled={Number(item.stock) < item.quantity}
                       className="mt-4 block rounded-lg border border-purple-500 px-4 py-2 text-sm font-semibold text-purple-400 transition hover:bg-purple-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       Buy Now
@@ -277,9 +252,7 @@ function Cart() {
 
           {/* Order Summary */}
           <div className="h-fit rounded-xl border border-white/10 bg-zinc-900 p-6">
-            <h2 className="text-xl font-bold">
-              Order Summary
-            </h2>
+            <h2 className="text-xl font-bold">Order Summary</h2>
 
             <div className="mt-6 flex justify-between text-gray-400">
               <span>Items ({totalItems})</span>
@@ -290,9 +263,7 @@ function Cart() {
               <div className="flex justify-between text-lg font-bold">
                 <span>Subtotal</span>
 
-                <span className="text-purple-400">
-                  ${subtotal.toFixed(2)}
-                </span>
+                <span className="text-purple-400">${subtotal.toFixed(2)}</span>
               </div>
 
               <p className="mt-3 text-xs text-gray-500">

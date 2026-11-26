@@ -1,17 +1,10 @@
-
 import PageHeader from "../components/PageHeader";
 import StatCard from "../components/StatCard";
-
 import { useDashboardStats } from "../hooks/useDashboardStats";
 import { useAdminOrders } from "../hooks/useAdminOrders";
 
 function Dashboard() {
-  const {
-    data,
-    isLoading,
-    isError,
-  } = useDashboardStats();
-
+  const { data, isLoading, isError } = useDashboardStats();
   const {
     data: orders = [],
     isLoading: ordersLoading,
@@ -27,10 +20,7 @@ function Dashboard() {
   }
 
   // Get the latest 5 orders
-  const latestOrders = [...orders]
-    .sort(
-      (a, b) => new Date(b.date) - new Date(a.date)
-    )
+  const latestOrders = [...orders].sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 5);
 
   const getStatusStyle = (status) => {
@@ -55,23 +45,11 @@ function Dashboard() {
 
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
-        <StatCard
-          title="Total Products"
-          value={data.totalProducts}
-          icon="📦"
-        />
+        <StatCard title="Total Products" value={data.totalProducts} icon="📦" />
 
-        <StatCard
-          title="Total Users"
-          value={data.totalUsers}
-          icon="👥"
-        />
+        <StatCard title="Total Users" value={data.totalUsers} icon="👥" />
 
-        <StatCard
-          title="Total Orders"
-          value={data.totalOrders}
-          icon="🛒"
-        />
+        <StatCard title="Total Orders" value={data.totalOrders} icon="🛒" />
 
         <StatCard
           title="Total Revenue"
@@ -119,9 +97,7 @@ function Dashboard() {
                       key={order.id}
                       className="border-t border-white/10 text-white"
                     >
-                      <td className="px-5 py-4">
-                        #{order.id}
-                      </td>
+                      <td className="px-5 py-4">#{order.id}</td>
 
                       <td className="px-5 py-4">
                         {order.shippingDetails?.fullName || "Unknown"}

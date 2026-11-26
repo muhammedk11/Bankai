@@ -1,4 +1,3 @@
-
 function StatCard({ title, value, icon }) {
   return (
     <div className="bg-[#15151f] border border-white/10 rounded-xl p-5">

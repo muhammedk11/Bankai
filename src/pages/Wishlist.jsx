@@ -29,11 +29,7 @@ function Wishlist() {
   const { addItem: addToCart } = useCart(user?.id);
 
   const wishlistItems = (wishlist?.productIds || [])
-    .map((id) =>
-      products.find(
-        (product) => String(product.id) === String(id)
-      )
-    )
+    .map((id) => products.find((product) => String(product.id) === String(id)))
     .filter(Boolean);
 
   const handleAddToCart = (product) => {
@@ -43,7 +39,7 @@ function Wishlist() {
         onSuccess: () => {
           removeItem.mutate(product.id);
         },
-      }
+      },
     );
   };
 
@@ -55,9 +51,7 @@ function Wishlist() {
   if (!user?.id) {
     return (
       <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 px-8 text-white">
-        <h1 className="text-4xl font-bold">
-          Login to View Your Wishlist
-        </h1>
+        <h1 className="text-4xl font-bold">Login to View Your Wishlist</h1>
 
         <Link
           to="/login"
@@ -100,9 +94,7 @@ function Wishlist() {
   if (wishlistItems.length === 0) {
     return (
       <section className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 px-8 text-white">
-        <h1 className="text-4xl font-bold">
-          Your Wishlist is Empty
-        </h1>
+        <h1 className="text-4xl font-bold">Your Wishlist is Empty</h1>
 
         <p className="mt-4 text-gray-400">
           Save your favourite anime products here.
@@ -119,9 +111,7 @@ function Wishlist() {
   }
 
   const hasMutationError =
-    addToCart.isError ||
-    removeItem.isError ||
-    clearWishlist.isError;
+    addToCart.isError || removeItem.isError || clearWishlist.isError;
 
   return (
     <section className="min-h-screen bg-zinc-950 px-8 py-16 text-white">
@@ -132,9 +122,7 @@ function Wishlist() {
               Your favourites
             </p>
 
-            <h1 className="text-4xl font-bold">
-              My Wishlist
-            </h1>
+            <h1 className="text-4xl font-bold">My Wishlist</h1>
 
             <p className="mt-3 text-gray-400">
               {wishlistItems.length} saved products
@@ -146,9 +134,7 @@ function Wishlist() {
             disabled={clearWishlist.isPending}
             className="text-sm text-red-400 transition hover:text-red-300 disabled:opacity-50"
           >
-            {clearWishlist.isPending
-              ? "Clearing..."
-              : "Clear Wishlist"}
+            {clearWishlist.isPending ? "Clearing..." : "Clear Wishlist"}
           </button>
         </div>
 
@@ -207,15 +193,10 @@ function Wishlist() {
 
                 <button
                   onClick={() => removeItem.mutate(product.id)}
-                  disabled={
-                    removeItem.isPending ||
-                    addToCart.isPending
-                  }
+                  disabled={removeItem.isPending || addToCart.isPending}
                   className="mt-3 w-full text-sm text-red-400 hover:text-red-300 disabled:opacity-50"
                 >
-                  {removeItem.isPending
-                    ? "Removing..."
-                    : "Remove"}
+                  {removeItem.isPending ? "Removing..." : "Remove"}
                 </button>
               </div>
             </div>

@@ -38,7 +38,6 @@ function Products() {
 
   const { data: products = [], isLoading, isError } =
     useAdminProducts();
-
   const addProductMutation = useAddProduct();
   const updateProductMutation = useUpdateProduct();
   const deleteProductMutation = useDeleteProduct();
